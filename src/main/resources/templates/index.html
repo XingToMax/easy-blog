@@ -1,10 +1,194 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Hello</title>
+    <title>Tomax admin</title>
+    <th:block th:include="head::head_link" />
 </head>
 <body>
-<h1>Hello world, <span data-th-text="${name}"></span></h1>
+    <!-- 顶部开始 -->
+    <div class="container">
+        <div class="logo"><a th:href="index.html">Easy Blog -admin</a></div>
+        <div class="left_open">
+            <i title="展开左侧栏" class="iconfont">&#xe699;</i>
+        </div>
+        <ul class="layui-nav right" lay-filter="">
+            <li class="layui-nav-item">
+                <a id="userAdmin">admin</a>
+            </li>
+            <li class="layui-nav-item to-index"><a id="indexAdmin">前台首页</a></li>
+        </ul>
+
+    </div>
+    <!-- 顶部结束 -->
+    <!-- 中部开始 -->
+    <!-- 左侧菜单开始 -->
+    <div class="left-nav">
+        <div id="side-nav">
+            <ul id="nav">
+                <li>
+                    <a _href="javascript:;">
+                        <i class="iconfont">&#xe626;</i>
+                        <cite>博客管理</cite>
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <a _href="blog">
+                                <i class="iconfont">&#xe7d1;</i>
+                                <cite>博客文章管理</cite>
+                            </a>
+                        </li>
+                        <li>
+                            <a _href="classification">
+                                <i class="iconfont">&#xe605;</i>
+                                <cite>分类管理</cite>
+                            </a>
+                        </li>
+                        <li>
+                            <a _href="label">
+                                <i class="iconfont">&#xe606;</i>
+                                <cite>标签管理</cite>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe6a2;</i>
+                        <cite>资源管理</cite>
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <a _href="folder">
+                                <i class="iconfont">&#xe761;</i>
+                                <cite>文件夹管理</cite>
+                            </a>
+                        </li>
+                        <li>
+                            <a _href="images">
+                                <i class="iconfont">&#xe680;</i>
+                                <cite>图床</cite>
+                            </a>
+                        </li>
+                        <li>
+                            <a _href="resources">
+                                <i class="iconfont">&#xe651;</i>
+                                <cite>文件资源</cite>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe73f;</i>
+                        <cite>用户管理</cite>
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <a _href="user">
+                                <i class="iconfont">&#xe68a;</i>
+                                <cite>用户信息</cite>
+                            </a>
+                        </li>
+                        <li>
+                            <a _href="link">
+                                <i class="iconfont">&#xe640;</i>
+                                <cite>用户链接</cite>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe61c;</i>
+                        <cite>数据管理</cite>
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <a _href="visitor">
+                                <i class="iconfont">&#xe679;</i>
+                                <cite>访客数据统计</cite>
+                            </a>
+                        </li>
+                        <li>
+                            <a _href="comment">
+                                <i class="iconfont">&#xe607;</i>
+                                <cite>评论管理</cite>
+                            </a>
+                        </li>
+                        <li>
+                            <a _href="blacklist">
+                                <i class="iconfont">&#xe604;</i>
+                                <cite>黑名单</cite>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe61b;</i>
+                        <cite>系统管理</cite>
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <a _href="system">
+                                <i class="iconfont">&#xe61d;</i>
+                                <cite>系统配置</cite>
+                            </a>
+                        </li>
+                        <li>
+                            <a _href="log">
+                                <i class="iconfont">&#xe7d0;</i>
+                                <cite>日志管理</cite>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- <div class="x-slide_left"></div> -->
+    <!-- 左侧菜单结束 -->
+    <!-- 右侧主体开始 -->
+    <div class="page-content">
+        <div class="layui-tab tab" lay-filter="xbs_tab" lay-allowclose="false">
+            <ul class="layui-tab-title">
+                <li class="home"><i class="layui-icon">&#xe68e;</i>我的桌面</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <iframe src='welcome' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-content-bg"></div>
+    <!-- 右侧主体结束 -->
+    <!-- 中部结束 -->
+    <!-- 底部开始 -->
+    <div class="footer">
+        <div class="copyright">Copyright ©2017 undefined-admin v1.0 All Rights Reserved</div>
+    </div>
+    <!-- 底部结束 -->
 </body>
+    <th:block th:include="foot::foot_js" />
+    <script>
+        layui.use('layer', function() {
+            var layer = layui.layer;
+            $('#userAdmin').click(function() {
+                layer.msg('别看了，全站只有我一个管理员', {
+                    icon: 5
+                });
+            });
+            $('#indexAdmin').click(function() {
+                layer.msg('前台尚未开发', {
+                    icon: 5
+                });
+            });
+        });
+    </script>
 </html>

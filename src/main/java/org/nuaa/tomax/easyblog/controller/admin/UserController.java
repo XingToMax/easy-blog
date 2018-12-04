@@ -38,4 +38,12 @@ public class UserController {
                 userService.getUserInfo(id)
         );
     }
+
+    @GetMapping("/null")
+    public @ResponseBody
+    Response getNull() {
+        UserEntity user = null;
+        user.getAvatar();
+        return new Response();
+    }
 }
