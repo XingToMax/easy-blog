@@ -1,5 +1,8 @@
 package org.nuaa.tomax.easyblog.entity;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -22,6 +25,7 @@ public class LinkEntity {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
         return id;
     }
@@ -92,6 +96,7 @@ public class LinkEntity {
 
     @Basic
     @Column(name = "time")
+    @Generated(GenerationTime.INSERT)
     public Timestamp getTime() {
         return time;
     }

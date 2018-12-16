@@ -1,5 +1,8 @@
 package org.nuaa.tomax.easyblog.entity;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -27,6 +30,7 @@ public class VisitorEntity {
 
     @Basic
     @Column(name = "create_time")
+    @Generated(GenerationTime.INSERT)
     public Timestamp getCreateTime() {
         return createTime;
     }

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>blog edit</title>
+    <th:block th:include="head::head_link" />
+    <link rel="stylesheet" th:href="@{/editor/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/editor/css/editormd.min.css}" />
+</head>
+<body>
+<div id="layout">
+    <header>
+        <h1>blog edit</h1>
+    </header>
+    <div id="test-editormd">
+            <textarea style="display:none;">[TOC]
+
+#### Disabled options
+
+- TeX (Based on KaTeX);
+- Emoji;
+- Task lists;
+- HTML tags decode;
+- Flowchart and Sequence Diagram;
+
+#### Editor.md directory
+
+    editor.md/
+            lib/
+            css/
+            scss/
+            tests/
+            fonts/
+            images/
+            plugins/
+            examples/
+            languages/
+            editormd.js
+            ...
+
+```html
+&lt;!-- English --&gt;
+&lt;script src="../dist/js/languages/en.js"&gt;&lt;/script&gt;
+
+&lt;!-- 繁體中文 --&gt;
+&lt;script src="../dist/js/languages/zh-tw.js"&gt;&lt;/script&gt;
+```
+</textarea>
+    </div>
+</div>
+
+<p>
+    <button id="create">创建文章</button>
+</p>
+</body>
+<th:block th:include="foot::foot_js" />
+<script th:src="@{/editor/js/editormd.min.js}"></script>
+<script type="text/javascript">
+    var testEditor;
+
+    $(function() {
+        testEditor = editormd("test-editormd", {
+            width: "90%",
+            height: 640,
+            syncScrolling: "single",
+            path: "/editor/lib/",
+            emoji: true,
+            tocm: true, // Using [TOCM]
+            tex: true, // 开启科学公式TeX语言支持，默认关闭
+            flowChart: true, // 开启流程图支持，默认关闭
+            sequenceDiagram: true, // 开启时序/序列图支持，默认关闭,
+        });
+
+        /*
+        // or
+        testEditor = editormd({
+            id      : "test-editormd",
+            width   : "90%",
+            height  : 640,
+            path    : "../lib/"
+        });
+        */
+
+        $("#create").click(function() {
+            let blog = {
+                name : "hello world",
+                brief : "hello",
+                cover : "...",
+                path : "...",
+                classification : 1,
+                labels : "hello,world,...",
+                userId : 1,
+                markdownContent : testEditor.getMarkdown(),
+            }
+
+            $.post('/admin/blog', blog, function (data) {
+                console.log(data)
+            })
+        })
+    });
+</script>
+</html>

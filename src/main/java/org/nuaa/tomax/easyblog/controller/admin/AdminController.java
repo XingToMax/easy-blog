@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,13 +17,14 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    @GetMapping
+    @GetMapping(name = "")
     public String admin() {
-        return "index";
+        return "login";
     }
 
     // 页面管理
     private static final List<String> ADMIN_PAGE_LIST = new ArrayList<String>(){{
+        add("index");
         add("welcome");
         add("blog");
         add("classification");
@@ -37,14 +39,13 @@ public class AdminController {
         add("blacklist");
         add("system");
         add("log");
+        add("blog-edit");
     }};
 
-
-    @GetMapping("/{page}")
-    public String welcome(@PathVariable(name = "page") String page) {
-        if (ADMIN_PAGE_LIST.contains(page)) {
-            return page;
-        }
-        return "error/404";
+    @GetMapping("/page/{page}")
+    public String welcome(@PathVariable(name = "page") String page, HttpSession session) {
+        return ADMIN_PAGE_LIST.contains(page) ?
+                session.getAttribute("User") != null ? page : "login" :
+                "error/404";
     }
 }

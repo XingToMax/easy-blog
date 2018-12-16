@@ -1,6 +1,10 @@
 package org.nuaa.tomax.easyblog.entity;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 /**
  * @Author: ToMax
@@ -15,9 +19,11 @@ public class AdminLogEntity {
     private Integer type;
     private Long target;
     private String targetName;
+    private Timestamp time;
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
         return id;
     }
@@ -90,5 +96,16 @@ public class AdminLogEntity {
         result = 31 * result + (target != null ? target.hashCode() : 0);
         result = 31 * result + (targetName != null ? targetName.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "time")
+    @Generated(GenerationTime.INSERT)
+    public Timestamp getTime() {
+        return time;
+    }
+
+    public void setTime(Timestamp time) {
+        this.time = time;
     }
 }

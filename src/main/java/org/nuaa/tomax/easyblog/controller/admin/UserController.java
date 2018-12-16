@@ -3,9 +3,14 @@ package org.nuaa.tomax.easyblog.controller.admin;
 import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.entity.UserEntity;
 import org.nuaa.tomax.easyblog.service.IUserService;
+import org.nuaa.tomax.easyblog.util.PasswordEncryptUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * @Author: ToMax
@@ -13,37 +18,44 @@ import org.springframework.web.bind.annotation.*;
  * @Date: Created in 2018/12/3 17:30
  */
 @Controller
+@CrossOrigin
 @RequestMapping("/admin/user")
 public class UserController {
     private final IUserService userService;
-
 
     @Autowired
     public UserController(IUserService userService) {
         this.userService = userService;
     }
 
-    @PostMapping("/")
+    /**
+     * 处理登录请求
+     * @param username
+     * @param password
+     * @param session
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws NoSuchAlgorithmException
+     */
+    @PostMapping("/login")
     public @ResponseBody
-    String save(UserEntity user) {
-        return "success";
+    Response login(String username, String password, HttpSession session) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        Response response = userService.login(username, password);
+        if (response.getCode() == Response.SUCCESS_CODE) {
+            Long userId = ((UserEntity) response.getData()).getId();
+            session.setAttribute("User", response.getData());
+        }
+        return response;
     }
 
-    @GetMapping("/{id}")
+
+    @GetMapping("")
     public @ResponseBody
-    Response getUser(@PathVariable(name = "id") long id) {
+    Response getUser() {
         return new Response<UserEntity>(
                 Response.SUCCESS_CODE,
                 "获取user成功",
-                userService.getUserInfo(id)
+                userService.getUserInfo(1L)
         );
-    }
-
-    @GetMapping("/null")
-    public @ResponseBody
-    Response getNull() {
-        UserEntity user = null;
-        user.getAvatar();
-        return new Response();
     }
 }

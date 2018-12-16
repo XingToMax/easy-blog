@@ -1,5 +1,8 @@
 package org.nuaa.tomax.easyblog.entity;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -38,6 +41,7 @@ public class CommentLogEntity {
 
     @Basic
     @Column(name = "time")
+    @Generated(GenerationTime.INSERT)
     public Timestamp getTime() {
         return time;
     }
@@ -70,6 +74,7 @@ public class CommentLogEntity {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
         return id;
     }

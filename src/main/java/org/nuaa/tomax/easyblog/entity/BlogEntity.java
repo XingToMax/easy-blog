@@ -1,5 +1,8 @@
 package org.nuaa.tomax.easyblog.entity;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -24,9 +27,29 @@ public class BlogEntity {
     private Integer recommendCount;
     private Long userId;
     private Integer type;
+    private String markdownContent;
+
+    private String htmlContent;
+    @Transient
+    public String getMarkdownContent() {
+        return markdownContent;
+    }
+
+    public void setMarkdownContent(String markdownContent) {
+        this.markdownContent = markdownContent;
+    }
+    @Transient
+    public String getHtmlContent() {
+        return htmlContent;
+    }
+
+    public void setHtmlContent(String htmlContent) {
+        this.htmlContent = htmlContent;
+    }
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
         return id;
     }
@@ -97,6 +120,7 @@ public class BlogEntity {
 
     @Basic
     @Column(name = "time")
+    @Generated(GenerationTime.INSERT)
     public Timestamp getTime() {
         return time;
     }
@@ -107,6 +131,7 @@ public class BlogEntity {
 
     @Basic
     @Column(name = "update_time")
+    @Generated(GenerationTime.ALWAYS)
     public Timestamp getUpdateTime() {
         return updateTime;
     }

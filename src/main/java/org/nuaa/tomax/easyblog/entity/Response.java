@@ -26,6 +26,11 @@ public class Response<T> {
      */
     public static final int INPUT_ERROR_CODE = 403;
 
+    /**
+     * server error ret code
+     */
+    public static final int SERVER_ERROR_CODE = 500;
+
     private int code;
     private String desc;
 

@@ -4,8 +4,13 @@ import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.entity.UserEntity;
 import org.nuaa.tomax.easyblog.repository.IUserRepository;
 import org.nuaa.tomax.easyblog.service.IUserService;
+import org.nuaa.tomax.easyblog.util.PasswordEncryptUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 /**
  * @Author: ToMax
@@ -23,8 +28,20 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public Response login(String username, String password) {
-        return null;
+    public Response login(String username, String password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        UserEntity user = userRepository.findByUsername(username);
+        if (user != null && PasswordEncryptUtil.validPassword(password, user.getPassword())) {
+            user.setPassword("");
+            return new Response<UserEntity>(
+                    Response.SUCCESS_CODE,
+                    "登录验证成功",
+                    user
+            );
+        }
+        return new Response(
+                Response.INPUT_ERROR_CODE,
+                "用户名或密码错误"
+        );
     }
 
     @Override

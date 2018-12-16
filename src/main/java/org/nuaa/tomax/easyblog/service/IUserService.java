@@ -3,6 +3,9 @@ package org.nuaa.tomax.easyblog.service;
 import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.entity.UserEntity;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+
 /**
  * @Author: ToMax
  * @Description:
@@ -16,7 +19,7 @@ public interface IUserService {
      * @param password
      * @return
      */
-    Response login(String username, String password);
+    Response login(String username, String password) throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
     /**
      * 获取用户信息

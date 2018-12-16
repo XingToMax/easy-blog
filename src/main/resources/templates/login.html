@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>登录</title>
+    <th:block th:include="head::head_link" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/button.css}">
+    <link rel="stylesheet" th:href="@{/css/user/user_normal.css}">
+</head>
+<body>
+    <div>
+        <div class="form-signin">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-5"><h2>登录</h2></div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" class="form-control" placeholder="Username" name="username" required autofocus>
+                    <br>
+                    <label for="password">密码</label>
+                    <input type="password" id="password" class="form-control" placeholder="Password" name="password" required>
+                    <br>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="remember-me" id="remb"> 记住密码
+                        </label>
+                    </div>
+                    <br>
+                    <button type="button" class="btn btn-lg btn-primary btn-block" id="loginBtn">登录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<th:block th:include="foot::foot_js" />
+<script type="text/javascript" th:src="@{/js/user/login.js}"></script>
+</html>

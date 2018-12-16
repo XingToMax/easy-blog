@@ -125,11 +125,11 @@
                 </table>
             </div>
         </fieldset>
-        <blockquote class="layui-elem-quote layui-quote-nm">感谢layui,百度Echarts,jquery,本系统由x-admin提供技术支持。</blockquote>
+        <blockquote class="layui-elem-quote layui-quote-nm">感谢jquery,layui,echarts,editormd 本系统由x-admin提供技术支持。</blockquote>
     </div>
 </body>
     <th:block th:include="foot::foot_js" />
-    <script>
+    <script th:inline="javascript">
         update_current_time()
         setInterval(update_current_time, 500)
 
