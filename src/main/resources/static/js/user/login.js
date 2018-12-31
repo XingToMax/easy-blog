@@ -10,7 +10,7 @@ $("#loginBtn").on('click',function () {
         if (result.code === 0) {
             window.location.href = '/admin/page/admin-index'
         } else {
-            layer.alert(result.desc, {icon: 2});
+            layer.alert(result.msg, {icon: 2});
         }
     })
 })

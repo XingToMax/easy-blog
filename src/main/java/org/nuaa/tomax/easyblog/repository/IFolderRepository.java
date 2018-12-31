@@ -54,15 +54,27 @@ public interface IFolderRepository extends JpaRepository<FolderEntity, Long> {
     Optional<FolderEntity> findFolderEntityByFatherAndNameAndType(Long father, String name, int type);
 
     /**
-     * update folder name and path
+     * update folder name
      * @param name target name
-     * @param path target path
      * @param folderId folder id
      * @return folder entity data
      */
     @Modifying
-    @Query(value = "update folder set name = ?1, path = ?2 where id = ?3", nativeQuery = true)
-    void updateFolderName(String name, String path, long folderId);
+    @Query(value = "update folder set name = ?1 where id = ?2", nativeQuery = true)
+    void updateFolderName(String name, long folderId);
+
+
+    /**
+     * update all children folders path when update one folder
+     * @param fatherCurrentPath target folder current path
+     * @param fatherOriginalPath target folder origin path
+     * @param likePath like path
+     * @param type folder type
+     */
+    @Modifying
+    @Query(value = "update folder set path = concat(?1, substr(path, 1 + length(?2), length(path))) where path like ?3 and type = ?4", nativeQuery = true)
+    void updateChildrenFolderPath(String fatherCurrentPath, String fatherOriginalPath, String likePath, int type);
+
 
 //    void deleteById()
 }

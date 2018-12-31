@@ -28,14 +28,14 @@ public class ResourceController {
     /**
      * list all folder data
      * @param type folder type
-     * @param from from
-     * @param end end
+     * @param page from
+     * @param limit end
      * @return query data
      */
     @GetMapping("/folder")
     public @ResponseBody
-    Response listFolderData(int type, int from, int end) {
-        return resourceService.listFolders(type, from, end);
+    Response listFolderData(int type, int page, int limit) {
+        return resourceService.listFolders(type, page, limit);
     }
 
     /**

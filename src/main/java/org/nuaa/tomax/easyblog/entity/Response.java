@@ -47,7 +47,7 @@ public class Response<T> {
     public static final int SERVER_DATA_NOT_FOUND_ERROR = 503;
 
     private int code;
-    private String desc;
+    private String msg;
 
     private T data;
     private List<T> array;
@@ -55,21 +55,21 @@ public class Response<T> {
 
     public Response() {}
 
-    public Response(int code, String desc) {
+    public Response(int code, String msg) {
         this.code = code;
-        this.desc = desc;
+        this.msg = msg;
     }
 
     public Response(int code, String desc, T data) {
         this.code = code;
-        this.desc = desc;
+        this.msg = msg;
         this.data = data;
         this.count = data != null ? 1 : 0;
     }
 
     public Response(int code, String desc, List<T> array) {
         this.code = code;
-        this.desc = desc;
+        this.msg = msg;
         this.array = array;
         this.count = array != null ? array.size() : 0;
     }

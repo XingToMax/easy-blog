@@ -11,6 +11,7 @@ import org.nuaa.tomax.easyblog.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -106,9 +107,12 @@ public class ResourceServiceImpl implements IResourceService{
         // get parent
         FolderEntity parent = folderRepository.findById(folder.getFather()).orElseGet(() -> null);
 
+        // create path
+        String path = sourceRootList[folder.getType()] + "/" + (parent != null ? parent.getPath() : "");
+
         // judge folder is exists or not
         boolean updateFileResult = isFileExists(folder.getFather(), name, folder.getType()) ||
-                !FileUtil.renameFile(sourceRootList[folder.getType()] + "/" + parent.getPath(), folder.getName(), name);
+                !FileUtil.renameFile(path, folder.getName(), name);
         if (updateFileResult) {
             return new Response(
                     Response.SERVER_DATA_DUPLICATION,
@@ -118,10 +122,15 @@ public class ResourceServiceImpl implements IResourceService{
 
         // update folder data to database
         try {
-            folderRepository.updateFolderName(name, parent.getPath() + "/" + name, folderId);
+            String currentPath = (parent != null ? parent.getPath() : "") + "/" + name;
+            folderRepository.updateFolderName(name, folder.getId());
+            // update folders path include children
+            folderRepository.updateChildrenFolderPath(currentPath, folder.getPath(), folder.getPath() + "%", folder.getType());
         } catch (Exception e) {
+            // rollback
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             // file rename rollback
-            FileUtil.renameFile(sourceRootList[folder.getType()] + "/" + parent.getPath(), name, folder.getName());
+            FileUtil.renameFile(path, name, folder.getName());
             return new Response(Response.NORMAL_EROOR_CODE, "data update to database fail");
         }
 
