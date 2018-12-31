@@ -31,6 +31,21 @@ public class Response<T> {
      */
     public static final int SERVER_ERROR_CODE = 500;
 
+    /**
+     * server data exists
+     */
+    public static final int SERVER_DATA_DUPLICATION = 501;
+
+    /**
+     * server file system error
+     */
+    public static final int SERVER_FILE_SYSTEM_ERROR = 502;
+
+    /**
+     * data not find
+     */
+    public static final int SERVER_DATA_NOT_FOUND_ERROR = 503;
+
     private int code;
     private String desc;
 

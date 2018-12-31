@@ -10,7 +10,7 @@ import org.nuaa.tomax.easyblog.entity.Response;
  */
 public interface IBlogService {
     /**
-     * 创建博客
+     * create blog
      * @param blog
      * @return
      */

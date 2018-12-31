@@ -24,7 +24,7 @@ public class AdminController {
 
     // 页面管理
     private static final List<String> ADMIN_PAGE_LIST = new ArrayList<String>(){{
-        add("index");
+        add("admin-index");
         add("welcome");
         add("blog");
         add("classification");

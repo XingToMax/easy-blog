@@ -8,7 +8,7 @@ $("#loginBtn").on('click',function () {
     $.post('/admin/user/login', param, function (result) {
         layer.closeAll('loading')
         if (result.code === 0) {
-            window.location.href = '/admin/page/index'
+            window.location.href = '/admin/page/admin-index'
         } else {
             layer.alert(result.desc, {icon: 2});
         }

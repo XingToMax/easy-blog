@@ -3,7 +3,6 @@ package org.nuaa.tomax.easyblog.controller.admin;
 import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.entity.UserEntity;
 import org.nuaa.tomax.easyblog.service.IUserService;
-import org.nuaa.tomax.easyblog.util.PasswordEncryptUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

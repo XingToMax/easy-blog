@@ -14,7 +14,7 @@ import java.security.NoSuchAlgorithmException;
 public interface IUserService {
 
     /**
-     * 登录验证
+     * administrator login verify
      * @param username
      * @param password
      * @return
@@ -22,7 +22,7 @@ public interface IUserService {
     Response login(String username, String password) throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
     /**
-     * 获取用户信息
+     * get user information
      * @param id
      * @return
      */
@@ -30,7 +30,7 @@ public interface IUserService {
 
 
     /**
-     * 更新用户信息
+     * update user information
      * @param user
      * @return
      */

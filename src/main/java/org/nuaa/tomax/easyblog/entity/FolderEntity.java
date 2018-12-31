@@ -21,6 +21,19 @@ public class FolderEntity {
     private Timestamp time;
     private Long userId;
     private Integer type;
+    private String path;
+
+    public FolderEntity() {
+
+    }
+
+    public FolderEntity(String name, Long father, Long userId, String path, Integer type) {
+        this.name = name;
+        this.father = father;
+        this.userId = userId;
+        this.path = path;
+        this.type = type;
+    }
 
     @Id
     @Column(name = "id")
@@ -122,5 +135,15 @@ public class FolderEntity {
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "path")
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }
