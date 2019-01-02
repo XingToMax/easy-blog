@@ -5,14 +5,22 @@
     <th:block th:include="head::head_link" />
     <link rel="stylesheet" th:href="@{/editor/css/style.css}" />
     <link rel="stylesheet" th:href="@{/editor/css/editormd.min.css}" />
+    <style>
+        header{
+            padding-bottom: 0px!important;
+        }
+    </style>
 </head>
 <body>
 <div id="layout">
     <header>
-        <h1>blog edit</h1>
+
+        <input type="text" name="blog-name" id="blog-name" class="layui-input" style="height: 60px; font-size: 20px; font-weight: bold; padding: 20px">
+
     </header>
-    <div id="test-editormd">
-            <textarea style="display:none;">[TOC]
+    <div class="main-container">
+        <div id="editormd-container">
+            <textarea style="display:none;" title="">[TOC]
 
 #### Disabled options
 
@@ -45,11 +53,14 @@
 &lt;script src="../dist/js/languages/zh-tw.js"&gt;&lt;/script&gt;
 ```
 </textarea>
+        </div>
     </div>
+
 </div>
 
 <p>
-    <button id="create">创建文章</button>
+    <button id="create" class="layui-btn layui-btn-normal">创建文章</button>
+    <button type="button" class="layui-btn layui-btn-normal" id="import-md">导入Markdown</button>
 </p>
 </body>
 <th:block th:include="foot::foot_js" />
@@ -58,7 +69,7 @@
     var testEditor;
 
     $(function() {
-        testEditor = editormd("test-editormd", {
+        testEditor = editormd("editormd-container", {
             width: "90%",
             height: 640,
             syncScrolling: "single",
@@ -73,7 +84,7 @@
         /*
         // or
         testEditor = editormd({
-            id      : "test-editormd",
+            id      : "editormd-container",
             width   : "90%",
             height  : 640,
             path    : "../lib/"
