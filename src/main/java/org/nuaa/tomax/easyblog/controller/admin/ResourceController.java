@@ -5,6 +5,9 @@ import org.nuaa.tomax.easyblog.service.IResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * @Author: ToMax
@@ -98,5 +101,14 @@ public class ResourceController {
             Response.SUCCESS_CODE,
                 "delete folder success"
         );
+    }
+
+    // image
+
+    @PostMapping("/image")
+    public @ResponseBody
+    Response uploadImage(MultipartFile image, Long parentId) throws IOException {
+        // TODO : image check
+        return resourceService.saveImage(image, parentId);
     }
 }
