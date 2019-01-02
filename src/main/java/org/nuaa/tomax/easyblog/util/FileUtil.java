@@ -1,5 +1,6 @@
 package org.nuaa.tomax.easyblog.util;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -89,5 +90,57 @@ public class FileUtil {
 
         // target file name exist
         return !nFile.exists() && oFile.renameTo(nFile);
+    }
+
+    /**
+     * delete folder
+     * @param file @NotNull
+     * @return delete result
+     */
+    public static boolean deleteFolder(File file) {
+        if (file.exists()) {
+            for (File children : file.listFiles()) {
+                if (children.isFile()) {
+                    deleteFile(children);
+                } else if (children.isDirectory()) {
+                    deleteFolder(children);
+                }
+            }
+            return file.delete();
+        }
+        return false;
+    }
+
+    /**
+     * delete single file
+     * @param file file
+     * @return delete result
+     */
+    public static boolean deleteFile(File file) {
+        return file.exists() && file.isFile() && file.delete();
+    }
+
+    /**
+     * save image in static folder
+     * @param file
+     * @param path
+     * @throws IOException
+     */
+    public static void generateVisitableImage(MultipartFile file, String path) throws IOException {
+        File image = new File(path);
+        if (!image.getParentFile().exists()) {
+            image.getParentFile().mkdirs();
+        }
+        file.transferTo(image);
+    }
+
+    /**
+     * copy file
+     * @param sourcePath
+     * @param destPath
+     * @throws IOException
+     */
+    public static void copyFile(String sourcePath, String destPath) throws IOException {
+        FileUtils.copyFile(new File(sourcePath), new File(destPath));
     }
 }

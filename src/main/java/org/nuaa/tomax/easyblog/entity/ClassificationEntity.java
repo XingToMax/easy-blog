@@ -20,6 +20,15 @@ public class ClassificationEntity {
     private String brief;
     private Timestamp time;
     private Long userId;
+    private String fatherName;
+
+    public String getFatherName() {
+        return fatherName;
+    }
+
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
+    }
 
     @Id
     @Column(name = "id")

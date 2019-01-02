@@ -84,4 +84,24 @@ layui.use('table', function () {
             });
         }
     });
+
+    $('#create-folder').click(function () {
+        layer.open({
+            type: 2,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['500px', '340px'], //宽高
+            content: 'model/create_folder',
+            title: '新建文件夹',
+            cancel : function(index, layero) {
+                // 刷新当前
+                folderTable.reload({
+                    page:{
+                        curr : folderTable.config.page.curr
+                    }
+                })
+            }
+        });
+    })
 });
+
+

@@ -1,10 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <th:block th:include="head::head_link" />
+    <style>
+    </style>
 </head>
 <body>
-
+<div style="margin-top: 50px; margin-left: 70px">
+    <div class="layui-form-item">
+        <label class="layui-form-label">文件夹名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="name" autocomplete="off" id="name-input" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">文件夹类型</label>
+        <div class="layui-input-inline">
+            <select name="type" lay-verify="required" id="type" class="layui-input">
+                <option value="1">博客</option>
+                <option value="2">图片</option>
+                <option value="3">文件</option>
+            </select>
+        </div>
+    </div>
+    <div align="center" style="margin-top: 40px">
+        <button id="create-submit" class="layui-btn layui-btn-normal">
+            提交
+        </button>
+    </div>
+</div>
 </body>
+<th:block th:include="foot::foot_js" />
+<script th:inline="javascript">
+    $('#create-submit').click(function () {
+        let name = $('#name-input').val()
+        let type = $('#type').val()
+        let param = {
+            name : name,
+            type : type,
+            parentId : 0
+        }
+        $.post(HOST + '/admin/resource/folder', param, (result) => {
+            if (result.code === 0) {
+                layer.msg('文件夹创建成功')
+            } else if (result.code === 502) {
+                layer.msg('服务器错误，文件夹创建失败')
+            } else if (result.code === 501) {
+                layer.msg('文件夹已存在')
+            }
+        })
+    })
+</script>
 </html>

@@ -5,7 +5,37 @@
     <th:block th:include="head::head_link" />
 </head>
 <body>
-    <th:block th:replace="model/work::work"></th:block>
+<fieldset class="layui-elem-field" style="margin-top: 20px;">
+    <legend>分类管理</legend>
+    <br>
+    <div style="margin-left: 50px">
+        <div class="layui-row">
+            <div class="layui-col-md4">
+                <button class="layui-btn layui-btn-normal" id="create-class">新建分类</button>
+            </div>
+            <div class="layui-col-md2">&nbsp;</div>
+            <div class="layui-col-md4">
+                <div class="" style="overflow:auto">
+                    搜索关键词：
+                    <div class="layui-inline">
+                        <input class="layui-input" name="id" id="reload" autocomplete="off">
+                    </div>
+                    <button class="layui-btn" data-type="reload">搜索</button>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <table id="classification-list" lay-filter="classification-list"></table>
+        </div>
+    </div>
+</fieldset>
 </body>
 <th:block th:include="foot::foot_js" />
+<script type="text/javascript" th:src="@{/js/blog/classification.js}"></script>
+<script type="text/html" id="edit-bar">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="add"><i class="iconfont">&#xe6b9;</i></a>
+    <a class="layui-btn layui-btn-xs" lay-event="update"><i class="iconfont">&#xe69e;</i></a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="iconfont">&#xe69d;</i></a>
+</script>
 </html>

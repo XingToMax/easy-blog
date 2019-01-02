@@ -2,7 +2,9 @@ package org.nuaa.tomax.easyblog.service.impl;
 
 import org.nuaa.tomax.easyblog.constant.ConstResourceType;
 import org.nuaa.tomax.easyblog.entity.FolderEntity;
+import org.nuaa.tomax.easyblog.entity.ImageEntity;
 import org.nuaa.tomax.easyblog.entity.Response;
+import org.nuaa.tomax.easyblog.repository.IBlogRepository;
 import org.nuaa.tomax.easyblog.repository.IFolderRepository;
 import org.nuaa.tomax.easyblog.repository.IImageRepository;
 import org.nuaa.tomax.easyblog.repository.IResourceRepository;
@@ -12,9 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author: ToMax
@@ -26,6 +32,7 @@ public class ResourceServiceImpl implements IResourceService{
     private final IFolderRepository folderRepository;
     private final IResourceRepository resourceRepository;
     private final IImageRepository imageRepository;
+    private final IBlogRepository blogRepository;
 
     private final Environment environment;
 
@@ -34,8 +41,10 @@ public class ResourceServiceImpl implements IResourceService{
      */
     private static String[] sourceRootList;
 
+    private static final String STATIC_IMAGE_PATH = "/gallery/visit/images/";
+
     @Autowired
-    public ResourceServiceImpl(IFolderRepository folderRepository, IResourceRepository resourceRepository, IImageRepository imageRepository, Environment environment) {
+    public ResourceServiceImpl(IFolderRepository folderRepository, IResourceRepository resourceRepository, IImageRepository imageRepository, Environment environment, IBlogRepository blogRepository) {
         this.folderRepository = folderRepository;
         this.resourceRepository = resourceRepository;
         this.imageRepository = imageRepository;
@@ -45,6 +54,7 @@ public class ResourceServiceImpl implements IResourceService{
         sourceRootList[ConstResourceType.BLOG_FOLDER_TYPE] = environment.getProperty("source.blog.path", "source/blog");
         sourceRootList[ConstResourceType.IMAGE_FOLDER_TYPE] = environment.getProperty("source.image.path", "source/image");
         sourceRootList[ConstResourceType.FILE_FOLDER_TYPE] = environment.getProperty("source.file.path", "source/file");
+        this.blogRepository = blogRepository;
     }
 
     @Override
@@ -126,6 +136,14 @@ public class ResourceServiceImpl implements IResourceService{
             folderRepository.updateFolderName(name, folder.getId());
             // update folders path include children
             folderRepository.updateChildrenFolderPath(currentPath, folder.getPath(), folder.getPath() + "%", folder.getType());
+            // update resource path
+            if (folder.getType() == ConstResourceType.BLOG_FOLDER_TYPE) {
+                blogRepository.updateChildrenBlogPath(currentPath, folder.getPath(), folder.getPath() + "%", folder.getType());
+            } else if (folder.getType() == ConstResourceType.IMAGE_FOLDER_TYPE) {
+                imageRepository.updateChildrenImagePath(currentPath, folder.getPath(), folder.getPath() + "%", folder.getType());
+            } else if (folder.getType() == ConstResourceType.FILE_FOLDER_TYPE) {
+                resourceRepository.updateChildrenResourcePath(currentPath, folder.getPath(), folder.getPath() + "%", folder.getType());
+            }
         } catch (Exception e) {
             // rollback
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -168,6 +186,125 @@ public class ResourceServiceImpl implements IResourceService{
                 Response.SUCCESS_CODE,
                 "get folder data success",
                 folderRepository.findById(folderId).orElseGet(() -> null)
+        );
+    }
+
+    @Override
+    public Response saveImage(MultipartFile file, Long parentId) throws IOException {
+        // TODO : think of file name may be same
+
+        // get parent path
+        FolderEntity folder = folderRepository.findById(parentId).orElseGet(() -> null);
+        String path = (folder != null ? folder.getPath() : "") + "/";
+
+        // suffix
+        String[] imageName = file.getOriginalFilename().split("\\.");
+
+        // save image
+        boolean result = FileUtil.saveFile(file, sourceRootList[ConstResourceType.IMAGE_FOLDER_TYPE] + '/' + path,
+                file.getOriginalFilename());
+        if (!result) {
+            return new Response(Response.SERVER_FILE_SYSTEM_ERROR, "save image fail");
+        }
+
+        // TODO : image size compress
+        String id = String.valueOf(System.nanoTime());
+        String visitImgPath = this.getClass().getResource("/").getPath() + "static" + STATIC_IMAGE_PATH + id + "." + imageName[1];
+        FileUtil.copyFile(
+                sourceRootList[ConstResourceType.IMAGE_FOLDER_TYPE] + "/" + path + file.getOriginalFilename(),
+                visitImgPath
+        );
+
+        // save data to database
+        ImageEntity image = new ImageEntity(path + "/" + file.getOriginalFilename(),
+                imageName[0], parentId, 1L, imageName[1],
+                STATIC_IMAGE_PATH + id + "." + imageName[1], file.getSize());
+        imageRepository.save(image);
+
+        return new Response(Response.SUCCESS_CODE, "save image success");
+    }
+
+    @Override
+    public Response getImageListByFolderId(Long parentId) {
+        return new Response<ImageEntity>(
+                Response.SUCCESS_CODE,
+                "get image data success",
+                imageRepository.findImageEntitiesByFolder(parentId)
+        );
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    @Override
+    public Response deleteImage(Long id) throws IOException {
+        ImageEntity image = imageRepository.findById(id).orElseGet(() -> null);
+        if (image == null) {
+            return new Response(Response.SERVER_DATA_NOT_FOUND_ERROR, "image not exists");
+        }
+
+        // delete data
+        imageRepository.deleteById(id);
+
+        // delete image file
+        if (!FileUtil.deleteFile(new File(sourceRootList[ConstResourceType.IMAGE_FOLDER_TYPE] + image.getPath()))) {
+            throw new IOException("server file process error");
+        }
+
+        return new Response(Response.SUCCESS_CODE, "image delete success");
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    @Override
+    public Response updateImageName(Long id, String name) {
+        ImageEntity image = imageRepository.findById(id).orElseGet(() -> null);
+        if (image == null) {
+            return new Response(Response.SERVER_DATA_NOT_FOUND_ERROR, "image not exists");
+        }
+
+        // get image suffix, assume the path is valid
+        String path = image.getPath().replace(image.getName() + "." + image.getSuffix(),
+                "");
+        // get prefix path
+        boolean result = FileUtil.renameFile(
+                sourceRootList[ConstResourceType.IMAGE_FOLDER_TYPE] + path, image.getName() + "." + image.getSuffix(),
+                name + "." + image.getSuffix());
+
+        if (!result) {
+            return new Response(Response.SERVER_FILE_SYSTEM_ERROR, "rename file fail");
+        }
+
+        // update data to database
+        imageRepository.updateImagePathAndNameById(path + name + "." + image.getSuffix(),
+                name, image.getId());
+
+        return new Response(Response.SUCCESS_CODE, "update image name success");
+    }
+
+    @Override
+    public Response getImageById(Long imageId) {
+        return new Response<ImageEntity>(
+                Response.SUCCESS_CODE,
+                "get image data success",
+                imageRepository.findById(imageId).orElseGet(() -> null)
+        );
+    }
+
+    @Override
+    public Response deleteImgList(List<Long> imageIdList) throws IOException {
+        int count = 0;
+        List<Long> errorIdList = new ArrayList<>();
+        for (Long id : imageIdList) {
+            Response response = deleteImage(id);
+            if (response.getCode() == Response.SUCCESS_CODE) {
+                count++;
+            } else {
+                errorIdList.add(id);
+            }
+        }
+
+        return new Response<Long>(
+                Response.SUCCESS_CODE,
+                count + "条成功," + errorIdList.size() + "条失败",
+                errorIdList
         );
     }
 

@@ -1,10 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <th:block th:include="head::head_link" />
+    <style>
+        .image-container{
+            margin-top: 40px;
+            margin-left: 40px;
+            margin-bottom: 40px;
+        }
+        .process{
+            margin-top: 40px;
+        }
+    </style>
 </head>
 <body>
+<fieldset class="layui-elem-field" style="margin-top: 20px;">
+    <legend id="image-name"></legend>
+    <br>
 
+    <div class="layui-row" style="min-height: 600px">
+        <div class="layui-col-md6 image-container" align="center">
+            <img src="" id="current-image" style="min-height: 200px; min-width: 300px; max-height: 600px; max-width: 600px;">
+        </div>
+        <div class="layui-col-md5" align="left">
+            <div class="layui-form">
+                <div class="layui-form-item" style="margin-top: 100px">
+                    <label class="layui-form-label">图片名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" autocomplete="off" id="image-name-input" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">访问路径</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="size" class="layui-input layui-btn-disabled" id="url" readonly="readonly">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">上传时间</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="size" class="layui-input layui-btn-disabled" id="time" disabled="disabled">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">大小</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="size" class="layui-input layui-btn-disabled" id="size" disabled="disabled">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">类型</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="size" class="layui-input layui-btn-disabled" id="type" disabled="disabled">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="process" align="center">
+                <button class="layui-btn layui-btn-normal" id="update-name">
+                    <i class="layui-icon">&#xe666;</i>
+                    更新</button>
+                <button class="layui-btn" id="copy-url" data-clipboard-target="#url">复制路径</button>
+            </div>
+        </div>
+    </div>
+</fieldset>
 </body>
+<th:block th:include="foot::foot_js" />
+<script type="text/javascript" th:src="@{/js/jquery/clipboard.min.js}"></script>
+<script th:inline="javascript">
+    let imageId = [[${id}]]
+
+    let imageData
+
+    $.get(HOST + '/admin/resource/image/id', {imageId : imageId}, (result) => {
+        $('#image-name').html(result.data.name)
+        $('#current-image').attr('src', HOST + result.data.url)
+        $('#image-name-input').val(result.data.name)
+        $('#url').val(HOST + result.data.url)
+        $('#time').val(result.data.time)
+        $('#size').val(result.data.size)
+        $('#type').val(result.data.suffix)
+        imageData = result.data
+    })
+    $('#update-name').click(function () {
+        let name = $('#image-name-input').val()
+        let param = {id : imageId, name : name}
+        console.log(param)
+        $.ajax({
+            url : HOST + '/admin/resource/image/id',
+            data : param,
+            type : 'PUT',
+            success : (result) => {
+                parent.$('#image-' + imageId + ' .folder-name').html(name)
+                layer.msg('更新成功')
+            }
+        })
+    })
+
+    let clipboard = new ClipboardJS('#copy-url');
+
+    clipboard.on('success', function(e) {
+        layer.msg('复制成功')
+    });
+
+    clipboard.on('error', function(e) {
+        layer.msg('复制失败')
+    });
+</script>
 </html>

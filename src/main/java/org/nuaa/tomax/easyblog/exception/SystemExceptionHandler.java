@@ -4,6 +4,7 @@ import org.nuaa.tomax.easyblog.entity.Response;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
@@ -28,6 +29,13 @@ public class SystemExceptionHandler {
         return new Response(
                 Response.SERVER_ERROR_CODE,
                 e.getMessage()
+        );
+    }
+
+    @ExceptionHandler(IOException.class)
+    public Response handle(IOException e) {
+        return new Response(
+                Response.SERVER_FILE_SYSTEM_ERROR, e.getMessage()
         );
     }
 }

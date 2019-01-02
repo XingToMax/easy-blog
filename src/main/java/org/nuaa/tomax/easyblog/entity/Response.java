@@ -46,6 +46,8 @@ public class Response<T> {
      */
     public static final int SERVER_DATA_NOT_FOUND_ERROR = 503;
 
+    public static final int SERVER_DATABASE_ERROR = 504;
+
     private int code;
     private String msg;
 
@@ -67,7 +69,7 @@ public class Response<T> {
         this.count = data != null ? 1 : 0;
     }
 
-    public Response(int code, String desc, List<T> array) {
+    public Response(int code, String msg, List<T> array) {
         this.code = code;
         this.msg = msg;
         this.array = array;

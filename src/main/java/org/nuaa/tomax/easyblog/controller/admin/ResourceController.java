@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @Author: ToMax
@@ -105,10 +106,68 @@ public class ResourceController {
 
     // image
 
+    /**
+     * upload image
+     * @param image
+     * @param parentId
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/image")
     public @ResponseBody
     Response uploadImage(MultipartFile image, Long parentId) throws IOException {
         // TODO : image check
         return resourceService.saveImage(image, parentId);
+    }
+
+    /**
+     * get image data by folder id
+     * @param parentId
+     * @return
+     */
+    @GetMapping("/image/folder")
+    public @ResponseBody
+    Response getImageDataByFolder(Long parentId) {
+        return resourceService.getImageListByFolderId(parentId);
+    }
+
+    /**
+     * get image data by image id
+     * @param imageId
+     * @return
+     */
+    @GetMapping("/image/id")
+    public @ResponseBody
+    Response getImageDataById(Long imageId) {
+        return resourceService.getImageById(imageId);
+    }
+
+    /**
+     * update image name by image id
+     * @param id
+     * @param name
+     * @return
+     */
+    @PutMapping("/image/id")
+    public @ResponseBody
+    Response updateImageName(Long id, String name) {
+        return resourceService.updateImageName(id, name);
+    }
+
+    /**
+     * delete image by image id
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/image/id")
+    public @ResponseBody
+    Response deleteImageById(Long id) throws IOException {
+        return resourceService.deleteImage(id);
+    }
+
+    @PostMapping("/image/batch")
+    public @ResponseBody
+    Response deleteImageByIdList(@RequestParam(value = "idList[]") List<Long> idList) throws IOException {
+        return resourceService.deleteImgList(idList);
     }
 }

@@ -1,8 +1,10 @@
 package org.nuaa.tomax.easyblog.service;
 
 import org.nuaa.tomax.easyblog.entity.Response;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @Author: ToMax
@@ -16,7 +18,6 @@ public interface IResourceService {
      * @param parentId parent folder id
      * @param type folder type
      * @return create result
-     * @throws IOException file exception
      */
     Response createNewFolder(String name, Long parentId, int type);
 
@@ -33,7 +34,6 @@ public interface IResourceService {
      * @param folderId folder id
      * @param name folder name
      * @return update result
-     * @throws IOException file exception
      */
     Response updateFolderName(Long folderId, String name);
 
@@ -60,4 +60,48 @@ public interface IResourceService {
      * @return folder data
      */
     Response getFolderById(Long folderId);
+
+    /**
+     * image save
+     * @param file
+     * @param parentId
+     * @return
+     */
+    Response saveImage(MultipartFile file, Long parentId) throws IOException;
+
+    /**
+     * get image list by folder id
+     * @param parentId
+     * @return
+     */
+    Response getImageListByFolderId(Long parentId);
+
+    /**
+     * delete image by id
+     * @param id
+     * @return
+     */
+    Response deleteImage(Long id) throws IOException;
+
+    /**
+     * update the name of image
+     * @param id
+     * @param name
+     * @return
+     */
+    Response updateImageName(Long id, String name);
+
+    /**
+     * get image data by image id
+     * @param imageId
+     * @return
+     */
+    Response getImageById(Long imageId);
+
+    /**
+     * delete img list
+     * @param imageIdList
+     * @return
+     */
+    Response deleteImgList(List<Long> imageIdList) throws IOException;
 }

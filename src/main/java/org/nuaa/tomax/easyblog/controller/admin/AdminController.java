@@ -1,6 +1,7 @@
 package org.nuaa.tomax.easyblog.controller.admin;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,9 @@ public class AdminController {
         return "login";
     }
 
-    // 页面管理
+    /**
+     * admin page
+     */
     private static final List<String> ADMIN_PAGE_LIST = new ArrayList<String>(){{
         add("admin-index");
         add("welcome");
@@ -42,10 +45,27 @@ public class AdminController {
         add("blog-edit");
     }};
 
+    /**
+     * model page
+     */
+    private static final List<String> ADMIN_MODEL_PAGE = new ArrayList<String>() {{
+        add("image_view");
+        add("create_folder");
+        add("create_class");
+    }};
+
     @GetMapping("/page/{page}")
     public String welcome(@PathVariable(name = "page") String page, HttpSession session) {
         return ADMIN_PAGE_LIST.contains(page) ?
                 session.getAttribute("User") != null ? page : "login" :
+                "error/404";
+    }
+
+    @GetMapping("/page/model/{page}")
+    public String modelPage(@PathVariable(name = "page") String page, HttpSession session, Long id, Model model) {
+        model.addAttribute("id", id);
+        return ADMIN_MODEL_PAGE.contains(page) ?
+                session.getAttribute("User") != null ? "model/" + page : "login" :
                 "error/404";
     }
 }

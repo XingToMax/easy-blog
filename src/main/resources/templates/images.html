@@ -3,9 +3,215 @@
 <head>
     <title>images</title>
     <th:block th:include="head::head_link" />
+    <style>
+
+        .folder-header{
+            line-height: 40px;
+        }
+        .folder-address{
+            margin-left: 60px;
+            font-size: 16px;
+        }
+        .folder-address a{
+            cursor: pointer;
+        }
+
+        #folder-back{
+            cursor: pointer;
+        }
+
+        .folder-container{
+            margin-left: 60px;
+            margin-top: 30px;
+        }
+
+        .folder-item{
+            width: 200px;
+            height: 200px;
+            float: left;
+            margin: 10px;
+            cursor: pointer;
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle;
+            border: 1px solid #fff;
+        }
+        .folder-cover{
+            width: 100px;
+            height: 100px;
+        }
+
+        .folder-name{
+            margin-top: 10px;
+        }
+
+        .chosen-image{
+            border: 1px solid #00aaaa !important;
+        }
+    </style>
 </head>
 <body>
-    <th:block th:replace="model/work::work"></th:block>
+    <fieldset class="layui-elem-field" style="margin-top: 20px;">
+        <legend>图片资源</legend>
+        <br>
+
+        <div class="folder-header layui-row">
+            <div class="folder-address layui-col-md4" id="head-address">
+                <span id="folder-back"><i class="layui-icon">&#xe65c;</i></span>
+                当前位置:
+                <a id="address-0" class="address-link root-link" onclick="linkJump(0)">图片/</a>
+            </div>
+            <div class="layui-col-md5">&nbsp;</div>
+
+            <div class="layui-col-md2" align="left">
+                <button type="button" class="layui-btn layui-btn-danger" id="image-edit">
+                    <i class="layui-icon">&#xe640;</i>批量删除
+                </button>
+                <button type="button" class="layui-btn layui-btn-normal" id="image-upload">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
+        </div>
+        <div class="folder-container" id="container">
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+            <div class="folder-item folder">
+                <img th:src="@{/images/folder.png}" class="folder-cover">
+                <p class="folder-name">name</p>
+            </div>
+        </div>
+    </fieldset>
 </body>
 <th:block th:include="foot::foot_js" />
+<script type="text/javascript" th:src="@{/js/resource/image.js}"></script>
 </html>

@@ -12,7 +12,7 @@ import java.sql.Timestamp;
  * @Date: Created in 2018/12/3 20:47
  */
 @Entity
-@Table(name = "image", schema = "easy-blog")
+@Table(name = "image", schema = "easy-blog", catalog = "")
 public class ImageEntity {
     private long id;
     private String path;
@@ -20,6 +20,23 @@ public class ImageEntity {
     private Long folder;
     private Timestamp time;
     private Long userId;
+    private String url;
+    private Long size;
+    private String suffix;
+
+    public ImageEntity() {
+
+    }
+
+    public ImageEntity(String path, String name, Long folder, Long userId, String suffix, String url, long size) {
+        this.path = path;
+        this.name = name;
+        this.folder = folder;
+        this.userId = userId;
+        this.suffix = suffix;
+        this.url = url;
+        this.size = size;
+    }
 
     @Id
     @Column(name = "id")
@@ -109,5 +126,35 @@ public class ImageEntity {
         result = 31 * result + (time != null ? time.hashCode() : 0);
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "url")
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @Basic
+    @Column(name = "size")
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
+    }
+
+    @Basic
+    @Column(name = "suffix")
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
 }
