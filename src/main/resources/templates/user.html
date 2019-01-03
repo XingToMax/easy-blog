@@ -3,11 +3,250 @@
 <head>
     <title>user</title>
     <th:block th:include="head::head_link" />
+    <style>
+
+        .avatar-container{
+            margin-top: 20px;
+        }
+        .basic-container{
+            margin-right: 50px;
+        }
+        #avatar{
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+        }
+        .expand-info-container{
+            margin: 50px;
+        }
+        .experience-container{
+            margin: 30px;
+        }
+        .experience-name{
+            border: none;
+        }
+        .time-container{
+            margin-top: 20px;
+        }
+        .qr-img{
+            width:300px;
+            height:400px;
+        }
+    </style>
 </head>
 <body>
-    <fieldset>
-
-    </fieldset>
+    <div class="layui-row">
+        <div class="layui-col-md2">&nbsp;</div>
+        <div class="layui-col-md8" style="margin-top: 50px">
+            <h1>信息编辑</h1><br><br><br>
+            <fieldset class="layui-elem-field">
+                <legend>基本信息</legend>
+                <div class="layui-row" style="padding-top: 50px; min-height: 350px">
+                    <div class="layui-col-md4 avatar-container" align="center">
+                        <img th:src="@{/images/avatar.png}" id="avatar">
+                    </div>
+                    <div class="layui-col-md8">
+                        <div class="basic-container layui-form">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">姓名</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="username" autocomplete="off" id="username" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">用户名</label>
+                                <div class="layui-input-block">
+                                    <input id="nickname" name="nickname" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">手机号</label>
+                                <div class="layui-input-block">
+                                    <input id="phone" name="phone" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">邮箱</label>
+                                <div class="layui-input-block">
+                                    <input id="email" name="email" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">性别</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="sex" value="男" title="男" checked="">
+                                    <input type="radio" name="sex" value="女" title="女">
+                                </div>
+                            </div>
+                            <div align="center" style="margin-top: 40px">
+                                <button id="save-basic-info" class="layui-btn" style="margin-right: 80px">
+                                    保存信息
+                                </button>
+                                <button id="update-password" class="layui-btn layui-btn-danger">
+                                    修改密码
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="layui-elem-field">
+                <legend>扩展信息</legend>
+                <div class="expand-info-container">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">个人签名</label>
+                        <div class="layui-input-block">
+                            <input id="signature" name="signature" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">爱好</label>
+                        <div class="layui-input-block">
+                            <input id="hobbies" name="hobbies" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">坐标</label>
+                        <div class="layui-input-inline">
+                            <input id="place" name="place" class="layui-input">
+                        </div>
+                        <label class="layui-form-label">组织</label>
+                        <div class="layui-input-inline">
+                            <input id="organization" name="organization" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">微信</label>
+                        <div class="layui-input-inline">
+                            <input id="wechat" name="wechat" class="layui-input">
+                        </div>
+                        <label class="layui-form-label">QQ</label>
+                        <div class="layui-input-inline">
+                            <input id="qq-number" name="qq-number" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Github</label>
+                        <div class="layui-input-inline">
+                            <input id="github" name="github" class="layui-input">
+                        </div>
+                        <label class="layui-form-label">微博</label>
+                        <div class="layui-input-inline">
+                            <input id="weibo" name="weibo" class="layui-input">
+                        </div>
+                    </div>
+                    <button id="save-expand-info" class="layui-btn" style="margin-left: 110px; margin-top: 20px">
+                        保存信息
+                    </button>
+                </div>
+            </fieldset>
+            <fieldset class="layui-elem-field">
+                <legend>经历</legend>
+                <button class="layui-btn layui-btn-normal" style="margin-left: 36px; margin-top: 16px;">
+                    <i class="layui-icon">&#xe654;</i>添加
+                </button>
+                <div class="experience-container">
+                    <fieldset class="layui-elem-field" style="padding-bottom: 10px">
+                        <legend><input type="text" value="经历一" class="experience-name"></legend>
+                        <div class="time-container layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">From</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="from-date-1" placeholder="yyyy-MM-dd">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">To</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="to-date-1" placeholder="yyyy-MM-dd">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="layui-form-item layui-form-text" style="margin-right: 80px!important;">
+                                <label class="layui-form-label">内容</label>
+                                <div class="layui-input-block">
+                                    <textarea placeholder="请输入内容" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="layui-btn" style="margin-left: 116px">更新</button>
+                        <button class="layui-btn layui-btn-danger">删除</button>
+                    </fieldset>
+                    <fieldset class="layui-elem-field" style="padding-bottom: 10px">
+                        <legend><input type="text" value="经历二" class="experience-name"></legend>
+                        <div class="time-container layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">From</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="from-date-2" placeholder="yyyy-MM-dd">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">To</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="to-date-2" placeholder="yyyy-MM-dd">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="layui-form-item layui-form-text" style="margin-right: 80px!important;">
+                                <label class="layui-form-label">内容</label>
+                                <div class="layui-input-block">
+                                    <textarea placeholder="请输入内容" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="layui-btn" style="margin-left: 116px">更新</button>
+                        <button class="layui-btn layui-btn-danger">删除</button>
+                    </fieldset>
+                </div>
+            </fieldset>
+            <fieldset class="layui-elem-field">
+                <legend>二维码信息</legend>
+                <div style="padding: 20px; background-color: #F2F2F2; margin-top: 20px">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md6">
+                            <div class="layui-card">
+                                <div class="layui-card-header">微信二维码</div>
+                                <div class="layui-card-body" align="center">
+                                    <img class="qr-img" th:src="@{/images/wechat.png}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-card">
+                                <div class="layui-card-header">微信支付二维码</div>
+                                <div class="layui-card-body" align="center">
+                                    <img class="qr-img" th:src="@{/images/wechat_pay.png}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-card">
+                                <div class="layui-card-header">支付宝二维码</div>
+                                <div class="layui-card-body" align="center">
+                                    <img class="qr-img" th:src="@{/images/alipay.png}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-card">
+                                <div class="layui-card-header">备用二维码</div>
+                                <div class="layui-card-body" align="center">
+                                    <img class="qr-img" th:src="@{/images/other_qr.png}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="layui-col-md2">&nbsp;</div>
+    </div>
 </body>
 <th:block th:include="foot::foot_js" />
+<script type="text/javascript" th:src="@{/js/user/user_info.js}"></script>
+<script type="text/javascript"></script>
+<input type="file" style="display: none;" id="avatar-file">
 </html>
