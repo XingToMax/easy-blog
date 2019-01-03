@@ -35,7 +35,7 @@ function deleteRequest(url, param, callback) {
     $.ajax({
         url : url,
         data : param,
-        type : 'PUT',
+        type : 'DELETE',
         success : (result) => {
             callback(result)
         }
