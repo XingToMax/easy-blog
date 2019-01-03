@@ -6,6 +6,8 @@ import org.nuaa.tomax.easyblog.service.IBlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 /**
  * @Author: ToMax
  * @Description:
@@ -23,10 +25,34 @@ public class BlogController {
         this.blogService = blogService;
     }
 
-    @PostMapping("")
-    public Response createBlog(BlogEntity blog) {
-        // TODO : 输入校验
+    @PostMapping
+    public Response createBlog(BlogEntity blog) throws IOException {
         return blogService.create(blog);
+    }
+
+    @GetMapping
+    public Response listBlog(int page, int limit) {
+        return blogService.getBlogList(page, limit);
+    }
+
+    @GetMapping("/{id}")
+    public Response getBlogById(@PathVariable(name = "id") Long id) {
+        return blogService.getBlogById(id);
+    }
+
+    @PutMapping("/data")
+    public Response updateBlogData(BlogEntity blog) {
+        return blogService.updateBlogData(blog);
+    }
+
+    @PutMapping("/content")
+    public Response updateBlogContent(BlogEntity blog) throws IOException {
+        return blogService.updateBlogContent(blog);
+    }
+
+    @DeleteMapping
+    public Response deleteBlogById(Long id) {
+        return blogService.deleteBlogById(id);
     }
 
     @GetMapping("/test")

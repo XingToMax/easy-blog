@@ -37,7 +37,7 @@
         let param = {
             name : name,
             brief : brief,
-            father : class_id
+            parentId : class_id
         }
         $.post(HOST + '/admin/classification', param, (result) => {
             if (result.code === 0) {

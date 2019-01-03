@@ -35,4 +35,6 @@ public interface IClassificationService {
      * @return
      */
     Response deleteClassification(Long id);
+
+    Response getLabelList();
 }

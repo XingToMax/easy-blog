@@ -15,10 +15,10 @@ import java.sql.Timestamp;
 @Table(name = "link", schema = "easy-blog")
 public class LinkEntity {
     private long id;
-    private long userId;
+    private long userId = 1;
     private String name;
     private String description;
-    private int type;
+    private int type = 1;
     private String icon;
     private String address;
     private Timestamp time;

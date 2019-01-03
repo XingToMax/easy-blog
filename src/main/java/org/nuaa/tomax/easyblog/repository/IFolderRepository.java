@@ -45,6 +45,13 @@ public interface IFolderRepository extends JpaRepository<FolderEntity, Long> {
     List<FolderEntity> findFolderEntitiesByTypeLimit(int type, int limit, int offset);
 
     /**
+     * count this type's num
+     * @param type type
+     * @return num
+     */
+    Long countFolderEntitiesByType(int type);
+
+    /**
      * select folder by father id and folder name
      * @param father father id
      * @param name folder name

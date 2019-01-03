@@ -23,10 +23,10 @@ public class BlogEntity {
     private String labels;
     private Timestamp time;
     private Timestamp updateTime;
-    private Integer watchCount;
-    private Integer recommendCount;
-    private Long userId;
-    private Integer type;
+    private Integer watchCount = 0;
+    private Integer recommendCount = 0;
+    private Long userId = 1L;
+    private Integer type = 1;
     private String markdownContent;
 
     private String htmlContent;
@@ -45,6 +45,16 @@ public class BlogEntity {
 
     public void setHtmlContent(String htmlContent) {
         this.htmlContent = htmlContent;
+    }
+
+    private String classificationName;
+
+    public String getClassificationName() {
+        return classificationName;
+    }
+
+    public void setClassificationName(String classificationName) {
+        this.classificationName = classificationName;
     }
 
     @Id

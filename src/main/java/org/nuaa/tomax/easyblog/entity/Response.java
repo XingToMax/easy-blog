@@ -53,7 +53,7 @@ public class Response<T> {
 
     private T data;
     private List<T> array;
-    private int count;
+    private long count;
 
     public Response() {}
 
@@ -74,5 +74,12 @@ public class Response<T> {
         this.msg = msg;
         this.array = array;
         this.count = array != null ? array.size() : 0;
+    }
+
+    public Response(int code, String msg, List<T> array, long count) {
+        this.code = code;
+        this.msg = msg;
+        this.array = array;
+        this.count = count;
     }
 }

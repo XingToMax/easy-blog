@@ -64,13 +64,14 @@ public class ClassificationServiceImpl implements IClassificationService{
 
     @Override
     public Response getClassificationData(int beg, int end) {
-        List<ClassificationEntity> classificationEntities = classificationRepository.findClassificationEntitiesByLimit(end - beg + 1, beg - 1);
+        List<ClassificationEntity> classificationEntities = classificationRepository.findClassificationEntitiesByLimit(end, (beg - 1) * end);
         classificationEntities.forEach(
                 e -> e.setFatherName(e.getFatherName() != null ? e.getFatherName() : "无"));
         return new Response<ClassificationEntity>(
                 Response.SUCCESS_CODE,
                 "get data success",
-                classificationEntities
+                classificationEntities,
+                classificationRepository.count()
         );
     }
 
@@ -78,6 +79,11 @@ public class ClassificationServiceImpl implements IClassificationService{
     public Response deleteClassification(Long id) {
         // TODO : DELETE CLASSIFICATION ?
         // LOGISTIC IS NOT CONFIRM
+        return null;
+    }
+
+    @Override
+    public Response getLabelList() {
         return null;
     }
 

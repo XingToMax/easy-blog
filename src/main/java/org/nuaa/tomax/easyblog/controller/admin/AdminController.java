@@ -42,7 +42,6 @@ public class AdminController {
         add("blacklist");
         add("system");
         add("log");
-        add("blog-edit");
     }};
 
     /**
@@ -52,6 +51,7 @@ public class AdminController {
         add("image_view");
         add("create_folder");
         add("create_class");
+        add("blog_edit");
     }};
 
     @GetMapping("/page/{page}")

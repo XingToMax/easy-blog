@@ -19,3 +19,25 @@ function post(url,param,callback){
         }
     });
 }
+
+function putRequest(url, param, callback) {
+    $.ajax({
+        url : url,
+        data : param,
+        type : 'PUT',
+        success : (result) => {
+            callback(result)
+        }
+    })
+}
+
+function deleteRequest(url, param, callback) {
+    $.ajax({
+        url : url,
+        data : param,
+        type : 'PUT',
+        success : (result) => {
+            callback(result)
+        }
+    })
+}

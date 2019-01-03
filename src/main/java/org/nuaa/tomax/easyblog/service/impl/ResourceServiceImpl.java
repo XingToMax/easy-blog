@@ -162,12 +162,14 @@ public class ResourceServiceImpl implements IResourceService{
                 new Response<FolderEntity>(
                     Response.SUCCESS_CODE,
                     "get all folders success",
-                    folderRepository.findFolderEntitiesLimit(end - beg + 1, beg - 1)
+                    folderRepository.findFolderEntitiesLimit(end, (beg - 1) * end),
+                    folderRepository.count()
                 ):
                 new Response<FolderEntity>(
                     Response.SUCCESS_CODE,
                     "get all folders success",
-                    folderRepository.findFolderEntitiesByTypeLimit(type, end - beg + 1, beg - 1)
+                    folderRepository.findFolderEntitiesByTypeLimit(type, end, (beg - 1) * end),
+                    folderRepository.countFolderEntitiesByType(type)
                 );
     }
 

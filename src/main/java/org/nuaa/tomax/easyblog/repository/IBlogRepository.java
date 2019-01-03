@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+import java.util.Optional;
+
 
 /**
  * @Author: ToMax
@@ -23,4 +26,51 @@ public interface IBlogRepository extends JpaRepository<BlogEntity, Long> {
     @Query(value = "update blog set path = concat(?1, substr(path, 1 + length(?2), length(path))) where path like ?3 and type = ?4", nativeQuery = true)
     void updateChildrenBlogPath(String fatherCurrentPath, String fatherOriginalPath, String likePath, int type);
 
+    /**
+     * check blog name exists or not
+     * @param name
+     * @param id
+     * @return
+     */
+    @Query(value = "select count(1) from blog b where b.name = ?1 and b.classification = ?2", nativeQuery = true)
+    Long findBlogEntityByNameAndClassification(String name, Long id);
+    /**
+     * check blog name exists or not
+     * @param name
+     * @param classification
+     * @param id
+     * @return
+     */
+    @Query(value = "select count(1) from blog b where b.name = ?1 and b.classification = ?2 and b.id != ?3", nativeQuery = true)
+    Long findBlogEntityByNameAndClassificationAndIdNot(String name, Long classification, Long id);
+
+    /**
+     * query data
+     * @param limit
+     * @param offset
+     * @return
+     */
+    @Query(value = "select b.id, b.name, b.cover, b.path, b.brief, b.classification, b.labels, b.time, b.update_time, b.watch_count, b.recommend_count, b.user_id, b.type, c.name as classification_name from blog as b inner join classification as c on b.classification = c.id limit ?1 offset ?2", nativeQuery = true)
+    List<BlogEntity> getBlogListByLimit(int limit, int offset);
+
+    /**
+     * query data by id
+     * @param id
+     * @return
+     */
+    @Query(value = "select b.id, b.name, b.cover, b.path, b.brief, b.classification, b.labels, b.time, b.update_time, b.watch_count, b.recommend_count, b.user_id, b.type, c.name as classification_name from blog as b inner join classification as c on b.classification = c.id where b.id = ?1", nativeQuery = true)
+    BlogEntity findBlogEntityById(Long id);
+
+    /**
+     * update blog data
+     * @param name
+     * @param cover
+     * @param classification
+     * @param labels
+     * @param type
+     * @param id
+     */
+    @Modifying
+    @Query(value = "update blog set name = ?1, cover = ?2, classification= ?3, labels = ?4, type = ?5, brief = ?6, path = ?7 where id = ?8", nativeQuery = true)
+    void updateBlogData(String name, String cover, Long classification, String labels, int type, String brief, String path, Long id);
 }

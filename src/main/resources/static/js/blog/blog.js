@@ -1,19 +1,21 @@
 layui.use('table', function () {
     let table = layui.table;
 
-    let classificationTable = table.render({
-        elem: '#classification-list'
+    let blogTable = table.render({
+        elem: '#blog-list'
         ,height: 500
-        ,width: 1240
-        ,url: HOST + '/admin/classification/'
+        ,width: 1390
+        ,url: HOST + '/admin/blog/'
         ,page: true
         ,cols: [[
             {type:'checkbox',fixed:'left',width:40}
             ,{field: 'id', title: 'ID', width:100, sort: true}
-            ,{field: 'name', title: '分类名', width:150, edit:'text'}
-            ,{field: 'fatherName', title: '所属类别', width:100}
-            ,{field: 'brief', title: '描述', width:500, edit:'text'}
-            ,{field: 'time', title: '创建时间', width: 200, sort: true}
+            ,{field: 'name', title: '文章名', width:150, edit:'text'}
+            ,{field: 'brief', title: '简介', width:400, edit:'text'}
+            ,{field: 'classificationName', title: '类别名', width:150, edit:'text'}
+            ,{field: 'labels', title: '标签', width:200, edit:'text'}
+            ,{field: 'watchCount', title: '浏览次数', width: 100, sort: true}
+            ,{field: 'recommendCount', title: '推荐次数', width: 100, sort: true}
             ,{title: '操作',width:150, align:'center', toolbar: '#edit-bar'}
         ]]
         ,response: {
@@ -29,29 +31,31 @@ layui.use('table', function () {
         }
     });
     //监听工具条
-    table.on('tool(classification-list)', (obj) => {
+    table.on('tool(blog-list)', (obj) => {
         let data = obj.data;
         let layEvent = obj.event;
         let tr = obj.tr;
         data.time = data.time.replace('T', ' ')
         data.time = data.time.substr(0, data.time.indexOf('+'))
+        data.updateTime = data.updateTime.replace('T', ' ')
+        data.updateTime = data.updateTime.substr(0, data.updateTime.indexOf('+'))
         if(layEvent === 'update'){
-            layer.confirm('确认更新分类信息', function (index) {
+            layer.confirm('确认更新博文信息', function (index) {
                 $.ajax({
-                    url : HOST + '/admin/classification',
+                    url : HOST + '/admin/blog/data',
                     data : data,
                     type : 'PUT',
                     success : (result) => {
                         // 刷新当前
-                        classificationTable.reload({
+                        blogTable.reload({
                             page:{
-                                curr : classificationTable.config.page.curr
+                                curr : blogTable.config.page.curr
                             }
                         })
                         if (result.code === 0) {
                             layer.msg('更新成功')
                         } else if (result.code === 501){
-                            layer.msg('分类名已存在')
+                            layer.msg('博文名重复')
                         } else {
                             layer.msg('更新失败')
                         }
@@ -59,21 +63,36 @@ layui.use('table', function () {
                 })
             });
         } else if(layEvent === 'delete') { //删除
-            layer.confirm('确认删除分类', (index) => {
-                layer.alert('风险太大，拒绝删除')
+            layer.confirm('确认删除文章', (index) => {
+                $.ajax({
+                    url : HOST + '/admin/blog',
+                    data : {id : data.id},
+                    type : 'DELETE',
+                    success : (result) => {
+                        // 刷新当前
+                        blogTable.reload({
+                            page:{
+                                curr : blogTable.config.page.curr
+                            }
+                        })
+                        layer.msg('删除成功')
+                    }
+                })
             });
-        } else if (layEvent === 'add') {
+        } else if (layEvent === 'edit') {
             layer.open({
                 type: 2,
-                skin: 'layui-layer-rim', //加上边框
-                area: ['600px', '340px'], //宽高
-                content: 'model/create_class?id=' + data.id,
-                title: '新建分类',
+                area: ['1600px', '800px'],
+                fixed: false, //不固定
+                maxmin: true,
+                title: '编辑文章',
+                content: 'model/blog_edit?id=' + data.id,
+                shadeClose: true,
                 cancel : function(index, layero) {
                     // 刷新当前
-                    classificationTable.reload({
+                    blogTable.reload({
                         page:{
-                            curr : classificationTable.config.page.curr
+                            curr : blogTable.config.page.curr
                         }
                     })
                 }
@@ -81,18 +100,20 @@ layui.use('table', function () {
         }
     });
 
-    $('#create-class').click(function () {
+    $('#create-blog').click(function () {
         layer.open({
             type: 2,
-            skin: 'layui-layer-rim', //加上边框
-            area: ['600px', '340px'], //宽高
-            content: 'model/create_class?id=0',
-            title: '新建分类',
+            area: ['1600px', '800px'],
+            fixed: false, //不固定
+            maxmin: true,
+            title: '编辑文章',
+            content: 'model/blog_edit?id=0',
+            shadeClose: true,
             cancel : function(index, layero) {
                 // 刷新当前
-                classificationTable.reload({
+                blogTable.reload({
                     page:{
-                        curr : classificationTable.config.page.curr
+                        curr : blogTable.config.page.curr
                     }
                 })
             }
