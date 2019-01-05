@@ -36,4 +36,12 @@ public interface IUserService {
      */
     Response updateUserInfo(UserEntity user);
 
+    /**
+     * get user info
+     * @return
+     */
+    Response userInfoApi();
+
+    Response systemInfoApi();
+
 }

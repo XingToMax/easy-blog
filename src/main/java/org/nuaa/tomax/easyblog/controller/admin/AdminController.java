@@ -56,6 +56,10 @@ public class AdminController {
 
     @GetMapping("/page/{page}")
     public String welcome(@PathVariable(name = "page") String page, HttpSession session) {
+        if ("logout".equals(page)) {
+            session.invalidate();
+            return "login";
+        }
         return ADMIN_PAGE_LIST.contains(page) ?
                 session.getAttribute("User") != null ? page : "login" :
                 "error/404";

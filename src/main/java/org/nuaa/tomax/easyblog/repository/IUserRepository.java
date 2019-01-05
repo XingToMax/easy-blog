@@ -2,6 +2,7 @@ package org.nuaa.tomax.easyblog.repository;
 
 import org.nuaa.tomax.easyblog.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  * @Author: ToMax
@@ -15,4 +16,12 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
      * @return
      */
     UserEntity findByUsername(String username);
+
+    /**
+     * get user name
+     * @param id
+     * @return
+     */
+    @Query(value = "select username from user where id = ?1", nativeQuery = true)
+    String getUsername(Long id);
 }

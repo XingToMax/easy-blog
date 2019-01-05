@@ -1,8 +1,10 @@
 package org.nuaa.tomax.easyblog.service.impl;
 
 import org.nuaa.tomax.easyblog.entity.BlogEntity;
+import org.nuaa.tomax.easyblog.entity.LabelEntity;
 import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.repository.IBlogRepository;
+import org.nuaa.tomax.easyblog.repository.IClassificationRepository;
 import org.nuaa.tomax.easyblog.service.IBlogService;
 import org.nuaa.tomax.easyblog.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author: ToMax
@@ -24,10 +28,12 @@ import java.util.Optional;
 public class BlogServiceImpl implements IBlogService {
 
     private final IBlogRepository blogRepository;
+    private final IClassificationRepository classificationRepository;
     private static String blogRootPath;
     @Autowired
-    public BlogServiceImpl(IBlogRepository blogRepository, Environment environment) {
+    public BlogServiceImpl(IBlogRepository blogRepository, IClassificationRepository classificationRepository, Environment environment) {
         this.blogRepository = blogRepository;
+        this.classificationRepository = classificationRepository;
 
         blogRootPath = environment.getProperty("source.blog.path", "source/blog");
     }
@@ -132,5 +138,74 @@ public class BlogServiceImpl implements IBlogService {
         // update html
         FileUtil.saveMarkdownFile(blog.getHtmlContent(), blogRootPath + "/", blogData.getName() + ".html");
         return new Response(Response.SUCCESS_CODE, "update blog content success");
+    }
+
+    @Override
+    public Response getBlogDataListRencentApi(int page, int limit) {
+        return new Response<BlogEntity>(
+                Response.SUCCESS_CODE,
+                "get blog success",
+                blogRepository.getBlogListByLimitOrderByTime(limit, (page - 1) * limit),
+                blogRepository.count()
+        );
+    }
+
+    @Override
+    public Response getBlogDataListTimeLineApi(int page, int limit) {
+        return new Response<BlogEntity>(
+                Response.SUCCESS_CODE,
+                "get blog success",
+                blogRepository.getBlogListByLimitOrderByTime(limit, (page - 1) * limit),
+                blogRepository.count()
+        );
+    }
+
+    @Override
+    public Response getBlogDataListByCategoryApi(Long classification, int page, int limit) {
+        return new Response<BlogEntity>(
+                Response.SUCCESS_CODE,
+                "get blog success",
+                blogRepository.getBlogListByClassificationAndLimit(classification, limit, (page - 1) * limit),
+                blogRepository.countClassificationBlog(classification)
+        );
+    }
+
+    @Override
+    public Response getBlogDataListByLabelApi(String label, int page, int limit) {
+        return new Response<BlogEntity>(
+                Response.SUCCESS_CODE,
+                "get blog success",
+                blogRepository.getBlogListByLabelAndLimit(label, limit, (page - 1) * limit),
+                blogRepository.countLabelBlog(label)
+        );
+    }
+
+    @Override
+    public Response getLabelListApi() {
+        List<String> labelList = blogRepository.getLabels();
+        List<String> labels = new LinkedList<>();
+        for (String labelCell : labelList) {
+            for (String cell : labelCell.split(";")) {
+                labels.add(cell);
+            }
+        }
+        List<LabelEntity> labelEntities = labels.stream()
+                .distinct()
+                .map(label -> new LabelEntity(label, blogRepository.countLabelBlog(label)))
+                .collect(Collectors.toList());
+        return new Response<LabelEntity>(
+                Response.SUCCESS_CODE,
+                "get labels success",
+                labelEntities
+        );
+    }
+
+    /**
+     * get classification name
+     * @param classification classification id
+     * @return classification name
+     */
+    private String getClassificationName(Long classification) {
+        return classificationRepository.findNameById(classification);
     }
 }

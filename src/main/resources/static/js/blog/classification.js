@@ -76,6 +76,14 @@ layui.use('table', function () {
                             curr : classificationTable.config.page.curr
                         }
                     })
+                },
+                end :function() {
+                    // 刷新当前
+                    classificationTable.reload({
+                        page:{
+                            curr : classificationTable.config.page.curr
+                        }
+                    })
                 }
             });
         }
@@ -89,6 +97,13 @@ layui.use('table', function () {
             content: 'model/create_class?id=0',
             title: '新建分类',
             cancel : function(index, layero) {
+                // 刷新当前
+                classificationTable.reload({
+                    page:{
+                        curr : classificationTable.config.page.curr
+                    }
+                })
+            },end :function() {
                 // 刷新当前
                 classificationTable.reload({
                     page:{

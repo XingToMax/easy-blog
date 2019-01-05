@@ -22,12 +22,32 @@ public class ClassificationEntity {
     private Long userId;
     private String fatherName;
 
+    private Long blogCount;
+    @Transient
+    public Long getBlogCount() {
+        return blogCount;
+    }
+
+    public void setBlogCount(Long blogCount) {
+        this.blogCount = blogCount;
+    }
+
     public String getFatherName() {
         return fatherName;
     }
 
     public void setFatherName(String fatherName) {
         this.fatherName = fatherName;
+    }
+
+    public ClassificationEntity() {
+
+    }
+
+    public ClassificationEntity(long id, String name, Long father) {
+        this.id = id;
+        this.name = name;
+        this.father = father;
     }
 
     @Id

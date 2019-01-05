@@ -50,4 +50,15 @@ public interface IClassificationRepository extends JpaRepository<ClassificationE
      */
     @Query(value = "select c1.id, c1.name, c1.father, c1.brief, c1.time, c1.user_id, c2.name as father_name from classification as c1 left join classification as c2 on c1.father = c2.id limit ?1 offset ?2", nativeQuery = true)
     List<ClassificationEntity> findClassificationEntitiesByLimit(int limit, int offset);
+
+    @Query(value = "select new ClassificationEntity (id, name, father) from ClassificationEntity")
+    List<ClassificationEntity> findClassificationEntitiesSimple();
+
+    /**
+     * get classification name
+     * @param id
+     * @return
+     */
+    @Query(value = "select name from classification where id = ?", nativeQuery = true)
+    String findNameById(Long id);
 }

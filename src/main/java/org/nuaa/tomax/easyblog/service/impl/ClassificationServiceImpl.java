@@ -2,6 +2,8 @@ package org.nuaa.tomax.easyblog.service.impl;
 
 import org.nuaa.tomax.easyblog.entity.ClassificationEntity;
 import org.nuaa.tomax.easyblog.entity.Response;
+import org.nuaa.tomax.easyblog.entity.view.CategoryEntity;
+import org.nuaa.tomax.easyblog.repository.IBlogRepository;
 import org.nuaa.tomax.easyblog.repository.IClassificationRepository;
 import org.nuaa.tomax.easyblog.service.IClassificationService;
 import org.nuaa.tomax.easyblog.service.IResourceService;
@@ -9,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,11 +26,13 @@ import java.util.stream.Collectors;
 public class ClassificationServiceImpl implements IClassificationService{
 
     private final IClassificationRepository classificationRepository;
+    private final IBlogRepository blogRepository;
     private final IResourceService resourceService;
 
     @Autowired
-    public ClassificationServiceImpl(IClassificationRepository classificationRepository, IResourceService resourceService) {
+    public ClassificationServiceImpl(IClassificationRepository classificationRepository, IBlogRepository blogRepository, IResourceService resourceService) {
         this.classificationRepository = classificationRepository;
+        this.blogRepository = blogRepository;
         this.resourceService = resourceService;
     }
 
@@ -83,8 +89,34 @@ public class ClassificationServiceImpl implements IClassificationService{
     }
 
     @Override
-    public Response getLabelList() {
-        return null;
+    public Response getClassificationListApi() {
+        List<ClassificationEntity> classificationEntities = classificationRepository.findClassificationEntitiesSimple();
+
+
+        LinkedHashMap<Long, CategoryEntity> categoryEntities = new LinkedHashMap<>();
+        classificationEntities.forEach(e -> {
+            e.setBlogCount(blogRepository.countBlogEntitiesByClassification(e.getId()));
+            categoryEntities.put(e.getId(), new CategoryEntity(e));
+            if (e.getFather() != 0) {
+                categoryEntities.get(e.getFather()).addNode(categoryEntities.get(e.getId()));
+            }
+        });
+
+        return new Response<CategoryEntity>(
+                Response.SUCCESS_CODE,
+                "get classification success",
+                categoryEntities.values().stream().filter(e -> e.getFather() == 0).collect(Collectors.toList()),
+                classificationEntities.size()
+        );
+    }
+
+    @Override
+    public Response getClassificationNameById(Long id) {
+        return new Response<String>(
+                Response.SUCCESS_CODE,
+                "get name success",
+                classificationRepository.findNameById(id)
+        );
     }
 
     /**
@@ -104,4 +136,5 @@ public class ClassificationServiceImpl implements IClassificationService{
 
         return null;
     }
+
 }

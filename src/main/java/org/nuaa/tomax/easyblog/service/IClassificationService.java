@@ -36,5 +36,11 @@ public interface IClassificationService {
      */
     Response deleteClassification(Long id);
 
-    Response getLabelList();
+    /**
+     * get all classification data
+     * @return
+     */
+    Response getClassificationListApi();
+
+    Response getClassificationNameById(Long id);
 }

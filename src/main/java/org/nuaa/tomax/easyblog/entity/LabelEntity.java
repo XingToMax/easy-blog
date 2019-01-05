@@ -10,6 +10,12 @@ import lombok.Data;
 @Data
 public class LabelEntity {
     private String name;
-    private Integer count;
+    private Long count;
     private Integer id;
+    private Integer level;
+
+    public LabelEntity(String name, Long count) {
+        this.name = name;
+        this.count = count;
+    }
 }

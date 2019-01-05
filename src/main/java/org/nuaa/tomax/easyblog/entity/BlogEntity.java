@@ -29,6 +29,23 @@ public class BlogEntity {
     private Integer type = 1;
     private String markdownContent;
 
+    public BlogEntity() {
+
+    }
+
+    public BlogEntity(long id, String name, String cover, String path, String brief, Long classification, String labels, Timestamp time, Integer watchCount, Integer recommendCount) {
+        this.id = id;
+        this.name = name;
+        this.cover = cover;
+        this.path = path;
+        this.brief = brief;
+        this.classification = classification;
+        this.labels = labels;
+        this.time = time;
+        this.watchCount = watchCount;
+        this.recommendCount = recommendCount;
+    }
+
     private String htmlContent;
     @Transient
     public String getMarkdownContent() {
@@ -45,6 +62,15 @@ public class BlogEntity {
 
     public void setHtmlContent(String htmlContent) {
         this.htmlContent = htmlContent;
+    }
+    private Long nextItem;
+    @Transient
+    public Long getNextItem() {
+        return nextItem;
+    }
+
+    public void setNextItem(Long nextItem) {
+        this.nextItem = nextItem;
     }
 
     private String classificationName;

@@ -31,17 +31,19 @@
 <th:block th:include="foot::foot_js" />
 <script th:inline="javascript">
     let class_id = [[${id}]]
+    console.log(class_id)
     $('#create-submit').click(function () {
         let name = $('#name-input').val()
         let brief = $('#brief').val()
         let param = {
             name : name,
             brief : brief,
-            parentId : class_id
+            father : class_id
         }
         $.post(HOST + '/admin/classification', param, (result) => {
             if (result.code === 0) {
                 layer.msg('分类创建成功')
+                parent.layer.closeAll()
             } else if (result.code === 403) {
                 layer.msg('输入非法，创建失败')
             }

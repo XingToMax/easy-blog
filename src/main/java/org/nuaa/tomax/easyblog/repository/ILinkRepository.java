@@ -25,4 +25,11 @@ public interface ILinkRepository extends JpaRepository<LinkEntity, Long> {
     @Modifying
     @Query(value = "update link set name = ?1, description = ?2, type = ?3, icon = ?4, address = ?5 where id = ?6", nativeQuery = true)
     void updateLinkData(String name, String description, int type, String icon, String address, Long id);
+
+    /**
+     * get friend link
+     * @return
+     */
+    @Query(value = "select * from link where type = 1", nativeQuery = true)
+    List<LinkEntity> getFriendLinkEntities();
 }

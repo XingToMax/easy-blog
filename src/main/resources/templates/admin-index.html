@@ -7,15 +7,18 @@
 <body>
     <!-- 顶部开始 -->
     <div class="container">
-        <div class="logo"><a th:href="index">Easy Blog -admin</a></div>
+        <div class="logo"><a th:href="admin-index">Easy Blog -admin</a></div>
         <div class="left_open">
             <i title="展开左侧栏" class="iconfont">&#xe699;</i>
         </div>
         <ul class="layui-nav right" lay-filter="">
             <li class="layui-nav-item">
-                <a id="userAdmin">admin</a>
+                <a>Tomax<span class="layui-nav-more"></span></a>
+                <ul class="layui-nav-child">
+                    <li><a onclick="logout()">退出</a></li>
+                </ul>
             </li>
-            <li class="layui-nav-item to-index"><a id="indexAdmin">前台首页</a></li>
+            <li class="layui-nav-item to-index"><a id="indexAdmin" href="http://tomax.xin">前台首页</a></li>
         </ul>
 
     </div>
@@ -190,5 +193,8 @@
                 });
             });
         });
+        function logout() {
+            window.location.href = HOST + '/admin/page/logout'
+        }
     </script>
 </html>

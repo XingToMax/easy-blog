@@ -22,42 +22,42 @@
                                             <a href="javascript:;" class="x-admin-backlog-body">
                                                 <h3>博文数</h3>
                                                 <p>
-                                                    <cite>3</cite></p>
+                                                    <cite id="blog-count">3</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs2">
                                             <a href="javascript:;" class="x-admin-backlog-body">
                                                 <h3>图片数</h3>
                                                 <p>
-                                                    <cite>5</cite></p>
+                                                    <cite id="img-count">5</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs2">
                                             <a href="javascript:;" class="x-admin-backlog-body">
                                                 <h3>资源数</h3>
                                                 <p>
-                                                    <cite>13</cite></p>
+                                                    <cite id="resource-count">13</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs2">
                                             <a href="javascript:;" class="x-admin-backlog-body">
-                                                <h3>访客数</h3>
+                                                <h3>累计访问次数</h3>
                                                 <p>
-                                                    <cite>42</cite></p>
+                                                    <cite id="visit-count">102</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs2">
                                             <a href="javascript:;" class="x-admin-backlog-body">
-                                                <h3>推荐数</h3>
+                                                <h3>分类数</h3>
                                                 <p>
-                                                    <cite>42</cite></p>
+                                                    <cite id="cls-count">42</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs2">
                                             <a href="javascript:;" class="x-admin-backlog-body">
-                                                <h3>下载量</h3>
+                                                <h3>标签数</h3>
                                                 <p>
-                                                    <cite>42</cite></p>
+                                                    <cite id="label-count">42</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs2">
@@ -90,36 +90,36 @@
                             <td>windows server 2012</td>
                         </tr>
                         <tr>
-                            <th></th>
-                            <td></td>
+                            <th>Web框架</th>
+                            <td>Spring boot</td>
                         </tr>
                         <tr>
-                            <th></th>
-                            <td></td>
+                            <th>持久化框架</th>
+                            <td>Spring Data Jpa + Hibernate</td>
                         </tr>
                         <tr>
-                            <th></th>
-                            <td></td>
+                            <th>缓存系统</th>
+                            <td>Redis</td>
                         </tr>
                         <tr>
-                            <th></th>
-                            <td></td>
+                            <th>UI框架</th>
+                            <td>layui</td>
                         </tr>
                         <tr>
-                            <th></th>
-                            <td></td>
+                            <th>MySQL版本</th>
+                            <td>5.6.15</td>
                         </tr>
                         <tr>
-                            <th></th>
-                            <td></td>
+                            <th>Markdown插件</th>
+                            <td>Editor.md</td>
                         </tr>
                         <tr>
-                            <th></th>
-                            <td></td>
+                            <th>Javascript框架</th>
+                            <td>JQuery</td>
                         </tr>
                         <tr>
-                            <th></th>
-                            <td></td>
+                            <th>图标库</th>
+                            <td>iconfont</td>
                         </tr>
                     </tbody>
                 </table>
@@ -147,5 +147,13 @@
             time_content += year + '-' + month + '-' + day + ' ' + hour + minute + (second < 10 ? '0' + second : second)
             $('#now_time').html(time_content)
         }
+
+        $.get(HOST + '/admin/system/countData', result => {
+            $('#blog-count').html(result.data.blogCount)
+            $('#img-count').html(result.data.imgCount)
+            $('#resource-count').html(result.data.resourceCount)
+            $('#cls-count').html(result.data.clsCount)
+            $('#label-count').html(result.data.labelCount)
+        })
     </script>
 </html>

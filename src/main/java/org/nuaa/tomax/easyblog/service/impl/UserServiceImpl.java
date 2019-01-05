@@ -2,7 +2,9 @@ package org.nuaa.tomax.easyblog.service.impl;
 
 import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.entity.UserEntity;
-import org.nuaa.tomax.easyblog.repository.IUserRepository;
+import org.nuaa.tomax.easyblog.entity.view.SystemCountDataView;
+import org.nuaa.tomax.easyblog.entity.view.UserView;
+import org.nuaa.tomax.easyblog.repository.*;
 import org.nuaa.tomax.easyblog.service.IUserService;
 import org.nuaa.tomax.easyblog.util.PasswordEncryptUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Optional;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @Author: ToMax
@@ -21,10 +25,18 @@ import java.util.Optional;
 public class UserServiceImpl implements IUserService{
 
     private final IUserRepository userRepository;
+    private final IBlogRepository blogRepository;
+    private final ILinkRepository linkRepository;
+    private final IClassificationRepository classificationRepository;
+    private final IImageRepository imageRepository;
 
     @Autowired
-    public UserServiceImpl(IUserRepository userRepository) {
+    public UserServiceImpl(IUserRepository userRepository, IBlogRepository blogRepository, ILinkRepository linkRepository, IClassificationRepository classificationRepository, IImageRepository imageRepository) {
         this.userRepository = userRepository;
+        this.blogRepository = blogRepository;
+        this.linkRepository = linkRepository;
+        this.classificationRepository = classificationRepository;
+        this.imageRepository = imageRepository;
     }
 
     @Override
@@ -56,5 +68,51 @@ public class UserServiceImpl implements IUserService{
                 Response.SUCCESS_CODE,
                 "更新user成功",
                 update);
+    }
+
+    @Override
+    public Response userInfoApi() {
+        List<String> labelList = blogRepository.getLabels();
+        Set<String> labelSet = new HashSet<>();
+        for (String label : labelList) {
+            for (String cell : label.split(";")) {
+                labelSet.add(cell);
+            }
+        }
+        return new Response<UserView>(
+                Response.SUCCESS_CODE,
+                "get user data success",
+                new UserView(
+                    userRepository.getUsername(1L),
+                    blogRepository.count(),
+                    classificationRepository.count(),
+                    (long) labelSet.size(),
+                    0L,
+                    "/images/avatar.png",
+                    linkRepository.getFriendLinkEntities()
+                )
+        );
+    }
+
+    @Override
+    public Response systemInfoApi() {
+        List<String> labelList = blogRepository.getLabels();
+        Set<String> labelSet = new HashSet<>();
+        for (String label : labelList) {
+            for (String cell : label.split(";")) {
+                labelSet.add(cell);
+            }
+        }
+        return new Response<SystemCountDataView>(
+                Response.SUCCESS_CODE,
+                "get user data success",
+                new SystemCountDataView(
+                        blogRepository.count(),
+                        classificationRepository.count(),
+                        (long) labelSet.size(),
+                        imageRepository.count(),
+                        0L
+                )
+        );
     }
 }

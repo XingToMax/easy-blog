@@ -53,4 +53,45 @@ public interface IBlogService {
      * @return
      */
     Response updateBlogContent(BlogEntity blog) throws IOException;
+
+    /**
+     * rencent publish blog
+     * @param page
+     * @param limit
+     * @return
+     */
+    Response getBlogDataListRencentApi(int page, int limit);
+
+    /**
+     * history data
+     * @param page
+     * @param limit
+     * @return
+     */
+    Response getBlogDataListTimeLineApi(int page, int limit);
+
+    /**
+     * blogs under categories
+     * @param classification
+     * @param page
+     * @param limit
+     * @return
+     */
+    Response getBlogDataListByCategoryApi(Long classification, int page, int limit);
+
+    /**
+     * blogs under label
+     * @param label
+     * @param page
+     * @param limit
+     * @return
+     */
+    Response getBlogDataListByLabelApi(String label, int page, int limit);
+
+    /**
+     * get all labels
+     * @return
+     */
+    Response getLabelListApi();
+
 }
