@@ -6,7 +6,7 @@
 	<groupId>org.nuaa.tomax</groupId>
 	<artifactId>easy-blog</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<name>easy-blog</name>
 	<description>personal blog system based on Spring Boot</description>

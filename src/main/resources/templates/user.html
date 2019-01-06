@@ -43,7 +43,7 @@
                 <legend>基本信息</legend>
                 <div class="layui-row" style="padding-top: 50px; min-height: 350px">
                     <div class="layui-col-md4 avatar-container" align="center">
-                        <img th:src="@{/images/avatar.png}" id="avatar">
+                        <img id="avatar">
                     </div>
                     <div class="layui-col-md8">
                         <div class="basic-container layui-form">
@@ -244,9 +244,75 @@
         </div>
         <div class="layui-col-md2">&nbsp;</div>
     </div>
+    <input type="file" style="display: none;" id="avatar-file">
 </body>
 <th:block th:include="foot::foot_js" />
 <script type="text/javascript" th:src="@{/js/user/user_info.js}"></script>
-<script type="text/javascript"></script>
-<input type="file" style="display: none;" id="avatar-file">
+<script type="text/javascript">
+    $('#avatar').attr('src', HOST + '/images/avatar.png')
+    $('#avatar').click(function () {
+        $('#avatar-file').click()
+    })
+    let layerIndex = 0
+    $('#avatar-file').change(function(){
+        let files = document.getElementById('avatar-file').files
+        if (files.length > 0) {
+            let param = new FormData()
+            param.append('file', files[0])
+            putRequestFile(HOST +'/admin/user/avatar', param, result =>{
+                $('#avatar').attr('src', HOST + '/images/avatar.png')
+            })
+        }
+    });
+    $('#update-password').click(function () {
+        layerIndex = layer.open({
+            type : 1,
+            title: '修改密码',
+            closeBtn: 1,
+            area: ['800px', '400px'],
+            content: $('#change-password')
+        });
+    })
+
+</script>
+<div style="display: none" id="change-password">
+    <div style="margin: 50px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">原密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" autocomplete="off" id="password-input" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">新密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="nPassword" autocomplete="off" id="nPassword" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">确认密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="cPassword" autocomplete="off" id="cPassword" class="layui-input">
+            </div>
+        </div>
+        <div align="center" style="margin-top: 30px">
+            <button id="confirm-save" class="layui-btn layui-btn-normal">
+                提交
+            </button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#confirm-save').click(function () {
+        let pass = $('#password-input')
+        let nPass = $('#nPassword')
+        let cPass = $('#cPassword')
+        if (nPass !== cPass) {
+            layer.msg('两次密码输入不一致')
+        } else {
+            // TODO : update
+            layer.close(layerIndex)
+        }
+    })
+</script>
 </html>

@@ -6,10 +6,14 @@ import org.nuaa.tomax.easyblog.entity.view.SystemCountDataView;
 import org.nuaa.tomax.easyblog.entity.view.UserView;
 import org.nuaa.tomax.easyblog.repository.*;
 import org.nuaa.tomax.easyblog.service.IUserService;
+import org.nuaa.tomax.easyblog.util.FileUtil;
 import org.nuaa.tomax.easyblog.util.PasswordEncryptUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
@@ -92,6 +96,23 @@ public class UserServiceImpl implements IUserService{
                     linkRepository.getFriendLinkEntities()
                 )
         );
+    }
+
+    @Override
+    public Response updateUserInfo(UserEntity user, MultipartFile file) throws IOException {
+        FileUtil.saveFile(file, this.getClass().getResource("/").getPath() + "static/images/", "avatar.png");
+        return new Response(Response.SUCCESS_CODE, "update user info success");
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    @Override
+    public Response changePassword(String origin, String current) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        UserEntity user = userRepository.findById(1L).orElseGet(()->null);
+        if (user != null && PasswordEncryptUtil.validPassword(origin, user.getPassword())) {
+            userRepository.updatePassword(PasswordEncryptUtil.getEncryptedPwd(current), 1L);
+            return new Response(Response.SUCCESS_CODE, "update password success");
+        }
+        return new Response(Response.NORMAL_EROOR_CODE, "origin password wrong");
     }
 
     @Override

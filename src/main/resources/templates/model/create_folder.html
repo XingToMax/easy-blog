@@ -45,6 +45,7 @@
         $.post(HOST + '/admin/resource/folder', param, (result) => {
             if (result.code === 0) {
                 layer.msg('文件夹创建成功')
+                parent.layer.closeAll()
             } else if (result.code === 502) {
                 layer.msg('服务器错误，文件夹创建失败')
             } else if (result.code === 501) {

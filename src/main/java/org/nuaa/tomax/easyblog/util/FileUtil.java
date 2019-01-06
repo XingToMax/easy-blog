@@ -66,7 +66,7 @@ public class FileUtil {
      */
     public static String readMarkdownFile(String path) throws IOException {
         FileInputStream inputStream = new FileInputStream(path);
-        Scanner scanner = new Scanner(inputStream);
+        Scanner scanner = new Scanner(inputStream, "UTF-8");
         StringBuilder markdownContentBuilder = new StringBuilder();
         while (scanner.hasNext()) {
             markdownContentBuilder.append(scanner.nextLine());

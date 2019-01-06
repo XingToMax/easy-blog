@@ -109,6 +109,7 @@
 
     let blogEditor;
 
+    let layerIndex = 0
     $(function() {
 
 
@@ -153,7 +154,7 @@
 
     $('#save-blog').click(function () {
         $('#name-input').val($('#blog-name').val())
-        layer.open({
+        layerIndex = layer.open({
             type : 1,
             title: '保存',
             closeBtn: 1,
@@ -252,6 +253,7 @@
                 $.post(HOST + '/admin/blog', param, (result) => {
                     if (result.code === 0) {
                         layer.msg('保存成功')
+                        layer.close(layerIndex)
                     } else if (result.code === 501) {
                         layer.msg('博文名已存在')
                     } else if (result.code === 502){
@@ -289,6 +291,7 @@
                 putRequest(HOST + '/admin/blog/content', paramContent, (result) => {
                     if (result.code === 0) {
                         layer.msg('更新成功')
+                        layer.close(layerIndex)
                     } else if (result.code === 503){
                         layer.msg('博文不存在')
                     } else if (result.code === 502){

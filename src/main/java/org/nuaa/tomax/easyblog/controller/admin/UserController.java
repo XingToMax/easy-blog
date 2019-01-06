@@ -6,8 +6,10 @@ import org.nuaa.tomax.easyblog.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
@@ -56,5 +58,11 @@ public class UserController {
                 "获取user成功",
                 userService.getUserInfo(1L)
         );
+    }
+
+    @PutMapping("/avatar")
+    public @ResponseBody
+    Response updateAvatar(MultipartFile file) throws IOException {
+        return userService.updateUserInfo(null, file);
     }
 }

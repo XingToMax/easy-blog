@@ -31,6 +31,19 @@ function putRequest(url, param, callback) {
     })
 }
 
+function putRequestFile(url, param, callback) {
+    $.ajax({
+        url : url,
+        data : param,
+        type : 'PUT',
+        contentType : false,
+        processData : false,
+        success : (result) => {
+            callback(result)
+        }
+    })
+}
+
 function deleteRequest(url, param, callback) {
     $.ajax({
         url : url,
