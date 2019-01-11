@@ -62,7 +62,7 @@ public class Response<T> {
         this.msg = msg;
     }
 
-    public Response(int code, String desc, T data) {
+    public Response(int code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;

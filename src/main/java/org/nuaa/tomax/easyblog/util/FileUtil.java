@@ -50,8 +50,15 @@ public class FileUtil {
      */
     public static boolean saveMarkdownFile(String content, String path, String fileName) throws IOException {
         if (createFolder(path)) {
-            FileWriter writer = new FileWriter(path + "/" + fileName);
+//            FileWriter writer = new FileWriter(path + "/" + fileName);
+//            writer.write(content);
+//            writer.close();
+            File file1 = new File(path + "/" + fileName);
+            Writer writer = new BufferedWriter(
+                    new OutputStreamWriter(
+                            new FileOutputStream(file1), "UTF-8"));
             writer.write(content);
+            writer.flush();
             writer.close();
             return true;
         }
