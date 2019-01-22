@@ -319,11 +319,6 @@ public class ResourceServiceImpl implements IResourceService{
         );
     }
 
-    @Override
-    public Response getImageResource(String token) throws UnsupportedEncodingException {
-        return null;
-    }
-
     /**
      * check file name in one folder
      * @param parentId father folder id

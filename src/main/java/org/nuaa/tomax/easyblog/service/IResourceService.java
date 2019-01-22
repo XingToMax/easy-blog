@@ -106,11 +106,4 @@ public interface IResourceService {
      * @return
      */
     Response deleteImgList(List<Long> imageIdList) throws IOException;
-
-    /**
-     * 获取图片资源
-     * @param token
-     * @return
-     */
-    Response getImageResource(String token) throws UnsupportedEncodingException;
 }
