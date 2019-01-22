@@ -9,7 +9,9 @@ import org.nuaa.tomax.easyblog.repository.IFolderRepository;
 import org.nuaa.tomax.easyblog.repository.IImageRepository;
 import org.nuaa.tomax.easyblog.repository.IResourceRepository;
 import org.nuaa.tomax.easyblog.service.IResourceService;
+import org.nuaa.tomax.easyblog.util.Base64Util;
 import org.nuaa.tomax.easyblog.util.FileUtil;
+import org.nuaa.tomax.easyblog.util.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,9 +43,11 @@ public class ResourceServiceImpl implements IResourceService{
     /**
      * source path root list, index is file type
      */
-    private static String[] sourceRootList;
+    private final String[] sourceRootList;
 
-    private static final String STATIC_IMAGE_PATH = "/gallery/visit/images/";
+    private final String galleryPath;
+
+    private static final String VISIT_URL_PATH = "/api/image/gallery/particular/";
 
     @Autowired
     public ResourceServiceImpl(IFolderRepository folderRepository, IResourceRepository resourceRepository, IImageRepository imageRepository, Environment environment, IBlogRepository blogRepository) {
@@ -54,6 +60,7 @@ public class ResourceServiceImpl implements IResourceService{
         sourceRootList[ConstResourceType.BLOG_FOLDER_TYPE] = environment.getProperty("source.blog.path", "source/blog");
         sourceRootList[ConstResourceType.IMAGE_FOLDER_TYPE] = environment.getProperty("source.image.path", "source/image");
         sourceRootList[ConstResourceType.FILE_FOLDER_TYPE] = environment.getProperty("source.file.path", "source/file");
+        galleryPath = environment.getProperty("source.gallery.path", "source/gallery");
         this.blogRepository = blogRepository;
     }
 
@@ -192,7 +199,7 @@ public class ResourceServiceImpl implements IResourceService{
     }
 
     @Override
-    public Response saveImage(MultipartFile file, Long parentId) throws IOException {
+    public Response saveImage(MultipartFile file, Long parentId) throws IOException, NoSuchAlgorithmException {
         // TODO : think of file name may be same
 
         // get parent path
@@ -210,8 +217,8 @@ public class ResourceServiceImpl implements IResourceService{
         }
 
         // TODO : image size compress
-        String id = String.valueOf(System.nanoTime());
-        String visitImgPath = this.getClass().getResource("/").getPath() + "static" + STATIC_IMAGE_PATH + id + "." + imageName[1];
+        String id = Md5Util.encode(String.valueOf(System.nanoTime()));
+        String visitImgPath = galleryPath + "/" + id + "." + imageName[1];
         FileUtil.copyFile(
                 sourceRootList[ConstResourceType.IMAGE_FOLDER_TYPE] + "/" + path + file.getOriginalFilename(),
                 visitImgPath
@@ -220,7 +227,7 @@ public class ResourceServiceImpl implements IResourceService{
         // save data to database
         ImageEntity image = new ImageEntity(path + "/" + file.getOriginalFilename(),
                 imageName[0], parentId, 1L, imageName[1],
-                STATIC_IMAGE_PATH + id + "." + imageName[1], file.getSize());
+                VISIT_URL_PATH + id + "." + imageName[1], file.getSize());
         imageRepository.save(image);
 
         return new Response(Response.SUCCESS_CODE, "save image success");
@@ -247,7 +254,9 @@ public class ResourceServiceImpl implements IResourceService{
         imageRepository.deleteById(id);
 
         // delete image file
-        if (!FileUtil.deleteFile(new File(sourceRootList[ConstResourceType.IMAGE_FOLDER_TYPE] + image.getPath()))) {
+        if (!FileUtil.deleteFile(new File(sourceRootList[ConstResourceType.IMAGE_FOLDER_TYPE] + image.getPath()))
+                || !FileUtil.deleteFile(new File(
+                        galleryPath + "/" + image.getUrl().replaceAll(VISIT_URL_PATH, "")))) {
             throw new IOException("server file process error");
         }
 
@@ -308,6 +317,11 @@ public class ResourceServiceImpl implements IResourceService{
                 count + "条成功," + errorIdList.size() + "条失败",
                 errorIdList
         );
+    }
+
+    @Override
+    public Response getImageResource(String token) throws UnsupportedEncodingException {
+        return null;
     }
 
     /**

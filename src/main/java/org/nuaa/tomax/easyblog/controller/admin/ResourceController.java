@@ -7,7 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.io.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -115,7 +116,7 @@ public class ResourceController {
      */
     @PostMapping("/image")
     public @ResponseBody
-    Response uploadImage(MultipartFile image, Long parentId) throws IOException {
+    Response uploadImage(MultipartFile image, Long parentId) throws IOException, NoSuchAlgorithmException {
         // TODO : image check
         return resourceService.saveImage(image, parentId);
     }

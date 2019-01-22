@@ -150,4 +150,37 @@ public class FileUtil {
     public static void copyFile(String sourcePath, String destPath) throws IOException {
         FileUtils.copyFile(new File(sourcePath), new File(destPath));
     }
+
+    /**
+     * 获取图片资源
+     * @param inputStream
+     * @param outputStream
+     * @throws IOException
+     */
+    public static void getImageResource(InputStream inputStream, OutputStream outputStream) {
+        BufferedInputStream bis = new BufferedInputStream(inputStream);
+        BufferedOutputStream bos = new BufferedOutputStream(outputStream);
+        int n = 0;
+        byte[] buffer = new byte[1024];
+        try {
+            while ((n = inputStream.read(buffer, 0, buffer.length)) != -1) {
+                bos.write(buffer, 0, buffer.length);
+            }
+        } catch (IOException e) {
+            // TODO : log
+            e.printStackTrace();
+        } finally {
+            try {
+                bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                bis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 }

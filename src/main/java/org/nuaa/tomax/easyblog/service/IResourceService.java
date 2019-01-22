@@ -4,6 +4,8 @@ import org.nuaa.tomax.easyblog.entity.Response;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -67,7 +69,7 @@ public interface IResourceService {
      * @param parentId
      * @return
      */
-    Response saveImage(MultipartFile file, Long parentId) throws IOException;
+    Response saveImage(MultipartFile file, Long parentId) throws IOException, NoSuchAlgorithmException;
 
     /**
      * get image list by folder id
@@ -104,4 +106,11 @@ public interface IResourceService {
      * @return
      */
     Response deleteImgList(List<Long> imageIdList) throws IOException;
+
+    /**
+     * 获取图片资源
+     * @param token
+     * @return
+     */
+    Response getImageResource(String token) throws UnsupportedEncodingException;
 }

@@ -5,8 +5,14 @@ import org.nuaa.tomax.easyblog.service.IBlogService;
 import org.nuaa.tomax.easyblog.service.IClassificationService;
 import org.nuaa.tomax.easyblog.service.ILinkService;
 import org.nuaa.tomax.easyblog.service.IUserService;
+import org.nuaa.tomax.easyblog.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  * @Author: ToMax
@@ -22,13 +28,15 @@ public class DataApiController {
     private final IClassificationService classificationService;
     private final IUserService userService;
 
+    private final String galleryPath;
 
     @Autowired
-    public DataApiController(IBlogService blogService, ILinkService linkService, IClassificationService classificationService, IUserService userService) {
+    public DataApiController(IBlogService blogService, ILinkService linkService, IClassificationService classificationService, IUserService userService, Environment environment) {
         this.blogService = blogService;
         this.linkService = linkService;
         this.classificationService = classificationService;
         this.userService = userService;
+        galleryPath = environment.getProperty("source.gallery.path", "source/gallery");
     }
 
     @GetMapping("/blog")
@@ -77,5 +85,22 @@ public class DataApiController {
     public @ResponseBody
     Response getUserInfo() {
         return userService.userInfoApi();
+    }
+
+    @GetMapping("/image/gallery/particular/{token}")
+    public @ResponseBody
+    void visitImage(@PathVariable(name = "token") String token, HttpServletResponse response) throws IOException {
+        response.setContentType("image/jpeg");
+        response.setHeader("Cache-Control", "max-age=604800");
+        FileInputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(galleryPath + "/" + token);
+            FileUtil.getImageResource(inputStream, response.getOutputStream());
+            inputStream.close();
+        } catch (IOException e) {
+            inputStream = new FileInputStream(this.getClass().getResource("/").getPath() + "/static/images/404.png");
+            FileUtil.getImageResource(inputStream, response.getOutputStream());
+            inputStream.close();
+        }
     }
 }
