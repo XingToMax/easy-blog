@@ -54,6 +54,15 @@ public interface IBlogService {
      */
     Response updateBlogContent(BlogEntity blog) throws IOException;
 
+
+    /**
+     * update blog publish state
+     * @param id
+     * @param state
+     * @return
+     */
+    Response updateBlogState(Long id, Integer state);
+
     /**
      * rencent publish blog
      * @param page
@@ -88,6 +97,12 @@ public interface IBlogService {
      */
     Response getBlogDataListByLabelApi(String label, int page, int limit);
 
+    /**
+     * get blog by id api
+     * @param id
+     * @return
+     */
+    Response getBlogByIdApi(Long id);
     /**
      * get all labels
      * @return

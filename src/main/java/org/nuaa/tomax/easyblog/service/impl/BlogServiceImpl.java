@@ -1,5 +1,6 @@
 package org.nuaa.tomax.easyblog.service.impl;
 
+import org.nuaa.tomax.easyblog.constant.ConstProcessState;
 import org.nuaa.tomax.easyblog.entity.BlogEntity;
 import org.nuaa.tomax.easyblog.entity.LabelEntity;
 import org.nuaa.tomax.easyblog.entity.Response;
@@ -88,6 +89,7 @@ public class BlogServiceImpl implements IBlogService {
                 blog.getType(),
                 blog.getBrief(),
                 blog.getPath(),
+                blog.getState(),
                 blog.getId());
         return new Response(
                 Response.SUCCESS_CODE, "update blog data success");
@@ -140,13 +142,23 @@ public class BlogServiceImpl implements IBlogService {
         return new Response(Response.SUCCESS_CODE, "update blog content success");
     }
 
+    @Transactional(rollbackOn = Exception.class)
+    @Override
+    public Response updateBlogState(Long id, Integer state) {
+        blogRepository.updateBlogState(state, id);
+        return new Response(
+                Response.SUCCESS_CODE,
+                "update blog publish state success"
+        );
+    }
+
     @Override
     public Response getBlogDataListRencentApi(int page, int limit) {
         return new Response<BlogEntity>(
                 Response.SUCCESS_CODE,
                 "get blog success",
                 blogRepository.getBlogListByLimitOrderByTime(limit, (page - 1) * limit),
-                blogRepository.count()
+                blogRepository.countAllPublishedBlog(ConstProcessState.BLOG_PUBLISH_STATE)
         );
     }
 
@@ -156,7 +168,7 @@ public class BlogServiceImpl implements IBlogService {
                 Response.SUCCESS_CODE,
                 "get blog success",
                 blogRepository.getBlogListByLimitOrderByTime(limit, (page - 1) * limit),
-                blogRepository.count()
+                blogRepository.countAllPublishedBlog(ConstProcessState.BLOG_PUBLISH_STATE)
         );
     }
 
@@ -166,7 +178,7 @@ public class BlogServiceImpl implements IBlogService {
                 Response.SUCCESS_CODE,
                 "get blog success",
                 blogRepository.getBlogListByClassificationAndLimit(classification, limit, (page - 1) * limit),
-                blogRepository.countClassificationBlog(classification)
+                blogRepository.countClassificationBlog(ConstProcessState.BLOG_PUBLISH_STATE, classification)
         );
     }
 
@@ -176,7 +188,27 @@ public class BlogServiceImpl implements IBlogService {
                 Response.SUCCESS_CODE,
                 "get blog success",
                 blogRepository.getBlogListByLabelAndLimit(label, limit, (page - 1) * limit),
-                blogRepository.countLabelBlog(label)
+                blogRepository.countLabelBlog(ConstProcessState.BLOG_PUBLISH_STATE, label)
+        );
+    }
+
+    @Override
+    public Response getBlogByIdApi(Long id) {
+        BlogEntity blog = blogRepository.findBlogEntityByIdAndState(id, ConstProcessState.BLOG_PUBLISH_STATE);
+        if(blog == null) {
+            return new Response(Response.SERVER_DATA_NOT_FOUND_ERROR, "blog not exists");
+        }
+
+        // read content
+        try {
+            blog.setMarkdownContent(FileUtil.readMarkdownFile(blogRootPath + blog.getPath() + ".md"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new Response<BlogEntity>(
+                Response.SUCCESS_CODE,
+                "get blog success",
+                blog
         );
     }
 
@@ -191,7 +223,7 @@ public class BlogServiceImpl implements IBlogService {
         }
         List<LabelEntity> labelEntities = labels.stream()
                 .distinct()
-                .map(label -> new LabelEntity(label, blogRepository.countLabelBlog(label)))
+                .map(label -> new LabelEntity(label, blogRepository.countLabelBlog(ConstProcessState.BLOG_PUBLISH_STATE, label)))
                 .collect(Collectors.toList());
         return new Response<LabelEntity>(
                 Response.SUCCESS_CODE,

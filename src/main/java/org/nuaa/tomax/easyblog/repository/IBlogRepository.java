@@ -50,13 +50,13 @@ public interface IBlogRepository extends JpaRepository<BlogEntity, Long> {
      * @param offset
      * @return
      */
-    @Query(value = "select b.id, b.name, b.cover, b.path, b.brief, b.classification, b.labels, b.time, b.update_time, b.watch_count, b.recommend_count, b.user_id, b.type, c.name as classification_name from blog as b inner join classification as c on b.classification = c.id limit ?1 offset ?2", nativeQuery = true)
+    @Query(value = "select b.id, b.name, b.cover, b.path, b.state, b.brief, b.classification, b.labels, b.time, b.update_time, b.watch_count, b.recommend_count, b.user_id, b.type, c.name as classification_name from blog as b inner join classification as c on b.classification = c.id limit ?1 offset ?2", nativeQuery = true)
     List<BlogEntity> getBlogListByLimit(int limit, int offset);
-    @Query(value = "select b.id, b.name, b.cover, b.path, b.brief, b.classification, b.labels, b.time, b.update_time, b.watch_count, b.recommend_count, b.user_id, b.type, c.name as classification_name from blog as b inner join classification as c on b.classification = c.id order by time desc limit ?1 offset ?2", nativeQuery = true)
+    @Query(value = "select b.id, b.name, b.cover, b.path, b.state, b.brief, b.classification, b.labels, b.time, b.update_time, b.watch_count, b.recommend_count, b.user_id, b.type, c.name as classification_name from blog as b inner join classification as c on b.classification = c.id where b.state = 1 order by time desc limit ?1 offset ?2", nativeQuery = true)
     List<BlogEntity> getBlogListByLimitOrderByTime(int limit, int offset);
-    @Query(value = "select b.id, b.name, b.cover, b.path, b.brief, b.classification, b.labels, b.time, b.update_time, b.watch_count, b.recommend_count, b.user_id, b.type, c.name as classification_name from blog as b inner join classification as c on b.classification = c.id where b.classification = ?1 order by time desc limit ?2 offset ?3", nativeQuery = true)
+    @Query(value = "select b.id, b.name, b.cover, b.path, b.state, b.brief, b.classification, b.labels, b.time, b.update_time, b.watch_count, b.recommend_count, b.user_id, b.type, c.name as classification_name from blog as b inner join classification as c on b.classification = c.id where b.state = 1 and b.classification = ?1 order by time desc limit ?2 offset ?3", nativeQuery = true)
     List<BlogEntity> getBlogListByClassificationAndLimit(Long classification, int limit, int offset);
-    @Query(value = "select b.id, b.name, b.cover, b.path, b.brief, b.classification, b.labels, b.time, b.update_time, b.watch_count, b.recommend_count, b.user_id, b.type, c.name as classification_name from blog as b inner join classification as c on b.classification = c.id where b.labels like %?1% order by time desc limit ?2 offset ?3", nativeQuery = true)
+    @Query(value = "select b.id, b.name, b.cover, b.path, b.state, b.brief, b.classification, b.labels, b.time, b.update_time, b.watch_count, b.recommend_count, b.user_id, b.type, c.name as classification_name from blog as b inner join classification as c on b.classification = c.id where b.state = 1 and b.labels like %?1% order by time desc limit ?2 offset ?3", nativeQuery = true)
     List<BlogEntity> getBlogListByLabelAndLimit(String label, int limit, int offset);
 
     /**
@@ -64,9 +64,17 @@ public interface IBlogRepository extends JpaRepository<BlogEntity, Long> {
      * @param id
      * @return
      */
-    @Query(value = "select b.id, b.name, b.cover, b.path, b.brief, b.classification, b.labels, b.time, b.update_time, b.watch_count, b.recommend_count, b.user_id, b.type, c.name as classification_name from blog as b inner join classification as c on b.classification = c.id where b.id = ?1", nativeQuery = true)
+    @Query(value = "select b.id, b.name, b.cover, b.state, b.path, b.brief, b.classification, b.labels, b.time, b.update_time, b.watch_count, b.recommend_count, b.user_id, b.type, c.name as classification_name from blog as b inner join classification as c on b.classification = c.id where b.id = ?1", nativeQuery = true)
     BlogEntity findBlogEntityById(Long id);
 
+    /**
+     * limit visit by state
+     * @param id
+     * @param state
+     * @return
+     */
+    @Query(value = "select b.id, b.name, b.cover, b.state, b.path, b.brief, b.classification, b.labels, b.time, b.update_time, b.watch_count, b.recommend_count, b.user_id, b.type, c.name as classification_name from blog as b inner join classification as c on b.classification = c.id where b.id = ?1 and state = ?2", nativeQuery = true)
+    BlogEntity findBlogEntityByIdAndState(Long id, Integer state);
     /**
      * update blog data
      * @param name
@@ -77,15 +85,25 @@ public interface IBlogRepository extends JpaRepository<BlogEntity, Long> {
      * @param id
      */
     @Modifying
-    @Query(value = "update blog set name = ?1, cover = ?2, classification= ?3, labels = ?4, type = ?5, brief = ?6, path = ?7 where id = ?8", nativeQuery = true)
-    void updateBlogData(String name, String cover, Long classification, String labels, int type, String brief, String path, Long id);
+    @Query(value = "update blog set name = ?1, cover = ?2, classification= ?3, labels = ?4, type = ?5, brief = ?6, path = ?7, state = ?8 where id = ?9", nativeQuery = true)
+    void updateBlogData(String name, String cover, Long classification, String labels, int type, String brief, String path, Integer state, Long id);
+
+    /**
+     * update blog publish state
+     * @param state
+     * @param id
+     */
+    @Modifying
+    @Query(value = "update blog set state = ?1 where id = ?2", nativeQuery = true)
+    void updateBlogState(Integer state, Long id);
 
     /**
      * count blog data under classification
+     * @param state
      * @param classificationId
      * @return
      */
-    Long countBlogEntitiesByClassification(Long classificationId);
+    Long countBlogEntitiesByStateAndClassification(Integer state, Long classificationId);
 
     /**
      * get this id's next
@@ -95,11 +113,14 @@ public interface IBlogRepository extends JpaRepository<BlogEntity, Long> {
     @Query(value = "select id from blog where id > ?1 limit 1", nativeQuery = true)
     Long getNextId(Long id);
 
-    @Query(value = "select count(1) from blog where classification = ?1", nativeQuery = true)
-    Long countClassificationBlog(Long classification);
+    @Query(value = "select count(1) from blog where state = ?1 and classification = ?2", nativeQuery = true)
+    Long countClassificationBlog(Integer state, Long classification);
 
-    @Query(value = "select count(1) from blog where labels like %?1%", nativeQuery = true)
-    Long countLabelBlog(String label);
+    @Query(value = "select count(1) from blog where state = ?1 and labels like %?2%", nativeQuery = true)
+    Long countLabelBlog(Integer state, String label);
+
+    @Query(value = "select count(1) from blog where state = ?1", nativeQuery = true)
+    Long countAllPublishedBlog(Integer state);
 
     @Query(value = "select labels from blog", nativeQuery = true)
     List<String> getLabels();

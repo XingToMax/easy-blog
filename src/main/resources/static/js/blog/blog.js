@@ -1,10 +1,11 @@
-layui.use('table', function () {
+layui.use(['table', 'form'], function () {
     let table = layui.table;
+    let form = layui.form;
 
     let blogTable = table.render({
         elem: '#blog-list'
-        ,height: 500
-        ,width: 1390
+        ,height: 600
+        ,width: 1500
         ,url: HOST + '/admin/blog/'
         ,page: true
         ,cols: [[
@@ -16,6 +17,7 @@ layui.use('table', function () {
             ,{field: 'labels', title: '标签', width:200, edit:'text'}
             ,{field: 'watchCount', title: '浏览次数', width: 100, sort: true}
             ,{field: 'recommendCount', title: '推荐次数', width: 100, sort: true}
+            ,{field: 'state', title: '发布状态', width : 110, templet:'#switchTpl'}
             ,{title: '操作',width:150, align:'center', toolbar: '#edit-bar'}
         ]]
         ,response: {
@@ -29,6 +31,21 @@ layui.use('table', function () {
             field: 'id'
             ,type: 'asc'
         }
+    });
+    form.on('checkbox(stateSwitch)', function(obj){
+        let id = obj.elem.id.split('-')[1]
+        let state = obj.elem.checked ? 1 : 0
+        let param = {
+            id : id,
+            state : state
+        }
+        putRequest(HOST + '/admin/blog/state', param, result => {
+            blogTable.reload({
+                page:{
+                    curr : blogTable.config.page.curr
+                }
+            })
+        })
     });
     //监听工具条
     table.on('tool(blog-list)', (obj) => {

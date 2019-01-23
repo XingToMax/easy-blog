@@ -48,7 +48,7 @@ public class DataApiController {
     @GetMapping("/blog/{id}")
     public @ResponseBody
     Response getBlogById(@PathVariable(name = "id") Long id) {
-        return blogService.getBlogById(id);
+        return blogService.getBlogByIdApi(id);
     }
 
     @GetMapping("/classification")

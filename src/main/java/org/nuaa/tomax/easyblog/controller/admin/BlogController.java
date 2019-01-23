@@ -50,6 +50,11 @@ public class BlogController {
         return blogService.updateBlogContent(blog);
     }
 
+    @PutMapping("/state")
+    public Response updateBlogState(Integer state, Long id) {
+        return blogService.updateBlogState(id, state);
+    }
+
     @DeleteMapping
     public Response deleteBlogById(Long id) {
         return blogService.deleteBlogById(id);

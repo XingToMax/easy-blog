@@ -1,5 +1,6 @@
 package org.nuaa.tomax.easyblog.service.impl;
 
+import org.nuaa.tomax.easyblog.constant.ConstProcessState;
 import org.nuaa.tomax.easyblog.entity.ClassificationEntity;
 import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.entity.view.CategoryEntity;
@@ -95,7 +96,7 @@ public class ClassificationServiceImpl implements IClassificationService{
 
         LinkedHashMap<Long, CategoryEntity> categoryEntities = new LinkedHashMap<>();
         classificationEntities.forEach(e -> {
-            e.setBlogCount(blogRepository.countBlogEntitiesByClassification(e.getId()));
+            e.setBlogCount(blogRepository.countBlogEntitiesByStateAndClassification(ConstProcessState.BLOG_PUBLISH_STATE, e.getId()));
             categoryEntities.put(e.getId(), new CategoryEntity(e));
             if (e.getFather() != 0) {
                 categoryEntities.get(e.getFather()).addNode(categoryEntities.get(e.getId()));

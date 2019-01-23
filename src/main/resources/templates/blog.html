@@ -32,10 +32,14 @@
 </fieldset>
 </body>
 <th:block th:include="foot::foot_js" />
+<script type="text/html" id="switchTpl">
+    <input type="checkbox" id="check-{{d.id}}" name="state" value="{{d.state}}" title="发布" lay-filter="stateSwitch" {{ d.state == 1 ? 'checked' : '' }}>
+</script>
 <script type="text/javascript" th:src="@{/js/blog/blog.js}"></script>
 <script type="text/html" id="edit-bar">
     <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>
     <a class="layui-btn layui-btn-xs" lay-event="update"><i class="iconfont">&#xe69e;</i></a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="iconfont">&#xe69d;</i></a>
 </script>
+
 </html>

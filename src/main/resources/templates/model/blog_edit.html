@@ -120,6 +120,7 @@
                 $('#blog-label').val(result.data.labels)
                 $('#blog-brief').val(result.data.brief)
                 $('#type').val(result.data.classification)
+                $(":radio[name='state'][value='" + result.data.state + "']").prop("checked", "checked");
                 blogEditor = editormd("editormd-container", {
                     width: "90%",
                     height: 640,
@@ -149,6 +150,7 @@
                 saveHTMLToTextarea : true,
                 searchReplace : true,
             });
+            $(":radio[name='state'][value='1']").prop("checked", "checked");
         }
     });
 
@@ -197,11 +199,18 @@
 
 </script>
 <div id="submit-save" style="display: none">
-    <div style="margin: 50px;">
+    <div class="" style="margin: 50px;">
         <div class="layui-form-item">
             <label class="layui-form-label">博客名</label>
             <div class="layui-input-block">
                 <input type="text" name="name" autocomplete="off" id="name-input" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">发布</label>
+            <div class="layui-input-block" align="left" style="padding-left: 25px">
+                是&nbsp;&nbsp;<input type="radio" name="state" value="1">&nbsp;&nbsp;&nbsp;&nbsp;
+                否&nbsp;&nbsp;<input type="radio" name="state" value="0">
             </div>
         </div>
         <div class="layui-form-item">
@@ -232,6 +241,7 @@
     </div>
     <script type="text/javascript">
         $('#confirm-save').click(function () {
+            let publish = $('input[name="state"]:checked').val()
             let blogName = $('#name-input').val()
             let classification = $('#type').val()
             let labelName = $('#blog-label').val()
@@ -246,7 +256,8 @@
                     labels : labelName,
                     brief : brief,
                     markdownContent : markdownContent,
-                    htmlContent : markdownHtml
+                    htmlContent : markdownHtml,
+                    state : publish
                 }
                 // save
 
@@ -269,7 +280,8 @@
                     name : blogName,
                     classification : classification,
                     labels : labelName,
-                    brief : brief
+                    brief : brief,
+                    state : publish
                 }
                 // update
                 putRequest(HOST + '/admin/blog/data', param, (result) => {

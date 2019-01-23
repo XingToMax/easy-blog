@@ -152,7 +152,7 @@ public class FileUtil {
     }
 
     /**
-     * 获取图片资源
+     * get image resource and output to stream
      * @param inputStream
      * @param outputStream
      * @throws IOException

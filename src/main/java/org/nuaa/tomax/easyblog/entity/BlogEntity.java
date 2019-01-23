@@ -12,7 +12,7 @@ import java.sql.Timestamp;
  * @Date: Created in 2018/12/3 20:47
  */
 @Entity
-@Table(name = "blog", schema = "easy-blog")
+@Table(name = "blog", schema = "easy-blog", catalog = "")
 public class BlogEntity {
     private long id;
     private String name;
@@ -28,11 +28,14 @@ public class BlogEntity {
     private Long userId = 1L;
     private Integer type = 1;
     private String markdownContent;
+    private String htmlContent;
+    private Long nextItem;
+    private String classificationName;
+    private Integer state = 0;
 
     public BlogEntity() {
 
     }
-
     public BlogEntity(long id, String name, String cover, String path, String brief, Long classification, String labels, Timestamp time, Integer watchCount, Integer recommendCount) {
         this.id = id;
         this.name = name;
@@ -46,7 +49,6 @@ public class BlogEntity {
         this.recommendCount = recommendCount;
     }
 
-    private String htmlContent;
     @Transient
     public String getMarkdownContent() {
         return markdownContent;
@@ -55,6 +57,7 @@ public class BlogEntity {
     public void setMarkdownContent(String markdownContent) {
         this.markdownContent = markdownContent;
     }
+
     @Transient
     public String getHtmlContent() {
         return htmlContent;
@@ -63,7 +66,7 @@ public class BlogEntity {
     public void setHtmlContent(String htmlContent) {
         this.htmlContent = htmlContent;
     }
-    private Long nextItem;
+
     @Transient
     public Long getNextItem() {
         return nextItem;
@@ -73,8 +76,8 @@ public class BlogEntity {
         this.nextItem = nextItem;
     }
 
-    private String classificationName;
-
+    @Basic
+    @Column(name = "classification_name")
     public String getClassificationName() {
         return classificationName;
     }
@@ -258,5 +261,15 @@ public class BlogEntity {
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "state")
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 }
