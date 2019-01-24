@@ -3,6 +3,7 @@ package org.nuaa.tomax.easyblog.service.impl;
 import org.nuaa.tomax.easyblog.constant.ConstResourceType;
 import org.nuaa.tomax.easyblog.entity.FolderEntity;
 import org.nuaa.tomax.easyblog.entity.ImageEntity;
+import org.nuaa.tomax.easyblog.entity.ResourceEntity;
 import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.repository.IBlogRepository;
 import org.nuaa.tomax.easyblog.repository.IFolderRepository;
@@ -14,8 +15,10 @@ import org.nuaa.tomax.easyblog.util.FileUtil;
 import org.nuaa.tomax.easyblog.util.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
@@ -47,7 +50,14 @@ public class ResourceServiceImpl implements IResourceService{
 
     private final String galleryPath;
 
+    /**
+     * image gallery visit url
+     */
     private static final String VISIT_URL_PATH = "/api/image/gallery/particular/";
+    /**
+     * file default logo url
+     */
+    private static final String FILE_DEFAULT_LOGO_URL = "/images/file-logo.png";
 
     @Autowired
     public ResourceServiceImpl(IFolderRepository folderRepository, IResourceRepository resourceRepository, IImageRepository imageRepository, Environment environment, IBlogRepository blogRepository) {
@@ -317,6 +327,90 @@ public class ResourceServiceImpl implements IResourceService{
                 count + "条成功," + errorIdList.size() + "条失败",
                 errorIdList
         );
+    }
+
+    @Override
+    public Response saveFileResource(MultipartFile file, Long parentId, String brief) throws IOException {
+        // TODO : think of file name may be same
+
+        // get parent path
+        FolderEntity folder = folderRepository.findById(parentId).orElseGet(() -> null);
+        String path = (folder != null ? folder.getPath() : "") + "/";
+
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+//
+        // save file
+        boolean result = FileUtil.saveFile(file, sourceRootList[ConstResourceType.FILE_FOLDER_TYPE] + '/' + path,
+                filename);
+        if (!result) {
+            return new Response(Response.SERVER_FILE_SYSTEM_ERROR, "save file fail");
+        }
+//
+        ResourceEntity resource = new ResourceEntity(path + "/" + filename,
+                filename, brief, FILE_DEFAULT_LOGO_URL, parentId);
+        // save data to database
+        resourceRepository.save(resource);
+
+        return new Response(Response.SUCCESS_CODE, "save file success");
+    }
+
+    @Override
+    public Response getFileResourceListByFolderId(Long id) {
+        return new Response<ResourceEntity>(
+                Response.SUCCESS_CODE,
+                "get file list success",
+                resourceRepository.findResourceEntitiesByFolder(id)
+        );
+    }
+    @Transactional(rollbackOn = Exception.class)
+    @Override
+    public Response deleteFileResource(Long id) throws IOException {
+        ResourceEntity resource = resourceRepository.findById(id).orElseGet(() -> null);
+        if (resource == null) {
+            return new Response(Response.SERVER_DATA_NOT_FOUND_ERROR, "resource not exists");
+        }
+
+        // delete data
+        resourceRepository.deleteById(id);
+
+        // delete image file
+        if (!FileUtil.deleteFile(new File(
+                sourceRootList[ConstResourceType.FILE_FOLDER_TYPE] + resource.getPath()))) {
+            throw new IOException("server file process error");
+        }
+
+        return new Response(Response.SUCCESS_CODE, "resource delete success");
+    }
+
+    @Override
+    public Response deleteFileResourceList(List<Long> idList) throws IOException {
+        int count = 0;
+        List<Long> errorIdList = new ArrayList<>();
+        for (Long id : idList) {
+            Response response = deleteFileResource(id);
+            if (response.getCode() == Response.SUCCESS_CODE) {
+                count++;
+            } else {
+                errorIdList.add(id);
+            }
+        }
+
+        return new Response<Long>(
+                Response.SUCCESS_CODE,
+                count + "条成功," + errorIdList.size() + "条失败",
+                errorIdList
+        );
+    }
+
+    @Override
+    public Resource downloadFileResource(Long id) {
+        ResourceEntity resource = resourceRepository.findById(id).orElseGet(() -> null);
+        if (resource == null) {
+            return null;
+        }
+
+
+        return null;
     }
 
     /**

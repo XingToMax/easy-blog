@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 /**
  * @Author: ToMax
  * @Description:
@@ -23,5 +25,11 @@ public interface IResourceRepository extends JpaRepository<ResourceEntity, Long>
     @Query(value = "update resource set path = concat(?1, substr(path, 1 + length(?2), length(path))) where path like ?3 and type = ?4", nativeQuery = true)
     void updateChildrenResourcePath(String fatherCurrentPath, String fatherOriginalPath, String likePath, int type);
 
+    /**
+     * select all resource under one folder
+     * @param folder
+     * @return
+     */
+    List<ResourceEntity> findResourceEntitiesByFolder(Long folder);
 
 }

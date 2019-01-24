@@ -5,7 +5,10 @@
     <th:block th:include="head::head_link" />
 </head>
 <body>
-    <th:block th:replace="model/work::work"></th:block>
+<button type="button" class="layui-btn layui-btn-normal" id="file-upload">
+    <i class="layui-icon">&#xe67c;</i>上传文件
+</button>
 </body>
 <th:block th:include="foot::foot_js" />
+<script type="text/javascript" th:src="@{/js/resource/resources.js}"></script>
 </html>

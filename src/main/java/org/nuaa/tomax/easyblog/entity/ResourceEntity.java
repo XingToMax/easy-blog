@@ -20,7 +20,21 @@ public class ResourceEntity {
     private String brief;
     private Long page;
     private Timestamp time;
-    private Integer userId;
+    private Integer userId = 1;
+    private String logo;
+    private Long folder;
+
+    public ResourceEntity() {
+
+    }
+
+    public ResourceEntity(String path, String name, String brief, String logo, Long folder) {
+        this.path = path;
+        this.name = name;
+        this.brief = brief;
+        this.logo = logo;
+        this.folder = folder;
+    }
 
     @Id
     @Column(name = "id")
@@ -122,5 +136,25 @@ public class ResourceEntity {
         result = 31 * result + (time != null ? time.hashCode() : 0);
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "logo")
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    @Basic
+    @Column(name = "folder")
+    public Long getFolder() {
+        return folder;
+    }
+
+    public void setFolder(Long folder) {
+        this.folder = folder;
     }
 }

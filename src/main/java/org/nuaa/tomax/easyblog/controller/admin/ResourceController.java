@@ -171,4 +171,10 @@ public class ResourceController {
     Response deleteImageByIdList(@RequestParam(value = "idList[]") List<Long> idList) throws IOException {
         return resourceService.deleteImgList(idList);
     }
+
+    @PostMapping("/file")
+    public @ResponseBody
+    Response uploadFileResource(MultipartFile file, Long folder, String brief) throws IOException {
+        return resourceService.saveFileResource(file, folder, brief);
+    }
 }

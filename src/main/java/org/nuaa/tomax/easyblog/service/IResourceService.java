@@ -1,6 +1,7 @@
 package org.nuaa.tomax.easyblog.service;
 
 import org.nuaa.tomax.easyblog.entity.Response;
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -106,4 +107,41 @@ public interface IResourceService {
      * @return
      */
     Response deleteImgList(List<Long> imageIdList) throws IOException;
+
+    /**
+     * save file resource
+     * @param file
+     * @param parentId
+     * @param brief
+     * @return
+     */
+    Response saveFileResource(MultipartFile file, Long parentId, String brief) throws IOException;
+
+    /**
+     * get file resource list by folder id
+     * @param id
+     * @return
+     */
+    Response getFileResourceListByFolderId(Long id);
+
+    /**
+     * delete file resource
+     * @param id
+     * @return
+     */
+    Response deleteFileResource(Long id) throws IOException;
+
+    /**
+     * delete resource list
+     * @param idList
+     * @return
+     */
+    Response deleteFileResourceList(List<Long> idList) throws IOException;
+
+    /**
+     * download file resource
+     * @param id
+     * @return
+     */
+    Resource downloadFileResource(Long id);
 }
