@@ -52,6 +52,7 @@ public class AdminController {
         add("create_folder");
         add("create_class");
         add("blog_edit");
+        add("resource_view");
     }};
 
     @GetMapping("/page/{page}")

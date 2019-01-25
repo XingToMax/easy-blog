@@ -144,4 +144,21 @@ public interface IResourceService {
      * @return
      */
     Resource downloadFileResource(Long id);
+
+    /**
+     * get file information by id
+     * @param id
+     * @return
+     */
+    Response getFileById(Long id);
+
+    /**
+     * update file resource info
+     * @param id
+     * @param file
+     * @param name
+     * @param brief
+     * @return
+     */
+    Response updateFileInfo(Long id, MultipartFile file, String name, String brief) throws IOException, NoSuchAlgorithmException;
 }

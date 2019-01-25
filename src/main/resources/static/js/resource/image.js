@@ -143,11 +143,10 @@ $('#image-edit').click(function () {
             deleteList.push(parseInt(chosenList[i].id.split('-')[1]))
         }
         let param = {idList : deleteList}
-        console.log(param)
         $.ajax({
             url : HOST + '/admin/resource/image/batch',
             data : param,
-            type : 'POST',
+            type : 'DELETE',
             success : (result) => {
                 layer.msg('删除结果 : ' + result.msg)
                 getFolderData(pageData.currentFolderId)

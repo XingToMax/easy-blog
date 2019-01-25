@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:include="head::head_link" />
+    <style>
+        .image-container{
+            margin-top: 40px;
+            margin-left: 40px;
+            margin-bottom: 40px;
+        }
+        .process{
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+<fieldset class="layui-elem-field" style="margin-top: 20px;">
+    <legend id="file-name"></legend>
+    <br>
+
+    <div class="layui-row" style="min-height: 600px;" align="center">
+        <div class="layui-col-md4 image-container">
+            <fieldset class="layui-elem-field" style="height: 300px; width: 220px; padding-top: 50px;">
+                <legend>logo</legend>
+                <img src="http://localhost:8080/images/file-logo.png" id="current-image" style="height: 200px; width: 200px;cursor: pointer">
+            </fieldset>
+        </div>
+        <div class="layui-col-md6" align="left">
+            <div class="layui-form">
+                <div class="layui-form-item" style="margin-top: 100px">
+                    <label class="layui-form-label">文件名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" autocomplete="off" id="file-name-input" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">简介</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容" class="layui-textarea" id="brief"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">上传时间</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="time" class="layui-input layui-btn-disabled" id="time" disabled="disabled">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">大小</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="size" class="layui-input layui-btn-disabled" id="size" disabled="disabled">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="type" class="layui-input layui-btn-disabled" id="type" disabled="disabled">
+                    </div>
+                </div>
+            </div>
+            <div class="process" align="center">
+                <button class="layui-btn layui-btn-normal" id="update-data">
+                    <i class="layui-icon">&#xe666;</i>更新</button>
+                <button class="layui-btn" id="download">
+                    <i class="layui-icon">&#xe601;</i>下载</button>
+            </div>
+        </div>
+    </div>
+</fieldset>
+<input type="file" id="logo-image" style="display: none">
+</body>
+<th:block th:include="foot::foot_js" />
+<script th:inline="javascript">
+    let resourceId = [[${id}]]
+
+    let resource
+    let currentLogo
+    let currentLogoChange = false
+
+    $.get(HOST + '/admin/resource/file', {id : resourceId}, (result) => {
+        let nameString = result.data.name.split('.')
+        $('#file-name').html(result.data.name)
+        $('#current-image').attr('src', HOST + result.data.logo)
+        $('#file-name-input').val(nameString[0])
+        $('#brief').val(result.data.brief)
+        $('#time').val(result.data.time)
+        $('#size').val(result.data.size)
+        $('#type').val(nameString.length > 1 ? nameString[1] : '无')
+        resource = result.data
+    })
+    $('#update-data').click(function () {
+        let name = $('#file-name-input').val()
+        let brief = $('#brief').val()
+        let formData = new FormData();
+        formData.append('id', resourceId)
+        formData.append('name', name)
+        formData.append('brief', brief)
+        if (currentLogoChange) {
+            formData.append('file', currentLogo)
+        }
+
+        putRequestFile(HOST + '/admin/resource/file', formData, result => {
+            parent.$('#image-' + resourceId + ' .folder-name').html(name)
+            layer.msg('更新成功')
+        })
+    })
+
+    $('#current-image').click(function () {
+        $('#logo-image').click()
+    })
+
+    $('#logo-image').change(function () {
+        let files = document.getElementById('logo-image').files
+        let image = ""
+        if (files.length > 0) {
+            // TODO : check import file type (need image type)
+            let reader = new FileReader();
+            reader.onload = function (evt) {
+                console.log(evt.target.result)
+                document.getElementById('current-image').src = evt.target.result;
+                image = evt.target.result;
+            }
+            reader.readAsDataURL(files[0]);
+            currentLogoChange = true
+            currentLogo = files[0]
+        }
+    })
+
+    $('#download').click(function () {
+        window.location.href = HOST + '/admin/resource/file/download?id=' + resourceId
+    })
+
+</script>
+</html>

@@ -1,36 +1,36 @@
 package org.nuaa.tomax.easyblog.service.impl;
 
-import org.nuaa.tomax.easyblog.constant.ConstResourceType;
-import org.nuaa.tomax.easyblog.entity.FolderEntity;
-import org.nuaa.tomax.easyblog.entity.ImageEntity;
-import org.nuaa.tomax.easyblog.entity.ResourceEntity;
-import org.nuaa.tomax.easyblog.entity.Response;
-import org.nuaa.tomax.easyblog.repository.IBlogRepository;
-import org.nuaa.tomax.easyblog.repository.IFolderRepository;
-import org.nuaa.tomax.easyblog.repository.IImageRepository;
-import org.nuaa.tomax.easyblog.repository.IResourceRepository;
-import org.nuaa.tomax.easyblog.service.IResourceService;
-import org.nuaa.tomax.easyblog.util.Base64Util;
-import org.nuaa.tomax.easyblog.util.FileUtil;
-import org.nuaa.tomax.easyblog.util.Md5Util;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.core.io.FileUrlResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
+        import org.nuaa.tomax.easyblog.constant.ConstResourceType;
+        import org.nuaa.tomax.easyblog.entity.FolderEntity;
+        import org.nuaa.tomax.easyblog.entity.ImageEntity;
+        import org.nuaa.tomax.easyblog.entity.ResourceEntity;
+        import org.nuaa.tomax.easyblog.entity.Response;
+        import org.nuaa.tomax.easyblog.repository.IBlogRepository;
+        import org.nuaa.tomax.easyblog.repository.IFolderRepository;
+        import org.nuaa.tomax.easyblog.repository.IImageRepository;
+        import org.nuaa.tomax.easyblog.repository.IResourceRepository;
+        import org.nuaa.tomax.easyblog.service.IResourceService;
+        import org.nuaa.tomax.easyblog.util.Base64Util;
+        import org.nuaa.tomax.easyblog.util.FileUtil;
+        import org.nuaa.tomax.easyblog.util.Md5Util;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.core.env.Environment;
+        import org.springframework.core.io.FileUrlResource;
+        import org.springframework.core.io.Resource;
+        import org.springframework.core.io.UrlResource;
+        import org.springframework.stereotype.Service;
+        import org.springframework.transaction.interceptor.TransactionAspectSupport;
+        import org.springframework.util.StringUtils;
+        import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
+        import javax.transaction.Transactional;
+        import java.io.File;
+        import java.io.IOException;
+        import java.io.UnsupportedEncodingException;
+        import java.net.MalformedURLException;
+        import java.security.NoSuchAlgorithmException;
+        import java.util.ArrayList;
+        import java.util.List;
 
 /**
  * @Author: ToMax
@@ -180,16 +180,16 @@ public class ResourceServiceImpl implements IResourceService{
     public Response listFolders(int type, int beg, int end) {
         return type == ConstResourceType.BLOG_UNKNOWN_TYPE ?
                 new Response<FolderEntity>(
-                    Response.SUCCESS_CODE,
-                    "get all folders success",
-                    folderRepository.findFolderEntitiesLimit(end, (beg - 1) * end),
-                    folderRepository.count()
+                        Response.SUCCESS_CODE,
+                        "get all folders success",
+                        folderRepository.findFolderEntitiesLimit(end, (beg - 1) * end),
+                        folderRepository.count()
                 ):
                 new Response<FolderEntity>(
-                    Response.SUCCESS_CODE,
-                    "get all folders success",
-                    folderRepository.findFolderEntitiesByTypeLimit(type, end, (beg - 1) * end),
-                    folderRepository.countFolderEntitiesByType(type)
+                        Response.SUCCESS_CODE,
+                        "get all folders success",
+                        folderRepository.findFolderEntitiesByTypeLimit(type, end, (beg - 1) * end),
+                        folderRepository.countFolderEntitiesByType(type)
                 );
     }
 
@@ -241,9 +241,12 @@ public class ResourceServiceImpl implements IResourceService{
         ImageEntity image = new ImageEntity(path + "/" + file.getOriginalFilename(),
                 imageName[0], parentId, 1L, imageName[1],
                 VISIT_URL_PATH + id + "." + imageName[1], file.getSize());
-        imageRepository.save(image);
 
-        return new Response(Response.SUCCESS_CODE, "save image success");
+        return new Response<ImageEntity>(
+                Response.SUCCESS_CODE,
+                "save image success",
+                imageRepository.save(image)
+        );
     }
 
     @Override
@@ -269,7 +272,7 @@ public class ResourceServiceImpl implements IResourceService{
         // delete image file
         if (!FileUtil.deleteFile(new File(sourceRootList[ConstResourceType.IMAGE_FOLDER_TYPE] + image.getPath()))
                 || !FileUtil.deleteFile(new File(
-                        galleryPath + "/" + image.getUrl().replaceAll(VISIT_URL_PATH, "")))) {
+                galleryPath + "/" + image.getUrl().replaceAll(VISIT_URL_PATH, "")))) {
             throw new IOException("server file process error");
         }
 
@@ -350,7 +353,7 @@ public class ResourceServiceImpl implements IResourceService{
         }
 //
         ResourceEntity resource = new ResourceEntity(path + "/" + filename,
-                filename, brief, FILE_DEFAULT_LOGO_URL, parentId);
+                filename, brief, FILE_DEFAULT_LOGO_URL, parentId, file.getSize());
         // save data to database
         resourceRepository.save(resource);
 
@@ -421,6 +424,37 @@ public class ResourceServiceImpl implements IResourceService{
             return null;
         }
         return null;
+    }
+
+    @Override
+    public Response getFileById(Long id) {
+        return new Response<ResourceEntity>(
+                Response.SUCCESS_CODE,
+                "get data success",
+                resourceRepository.findById(id).orElseGet(() -> null)
+        );
+    }
+    @Transactional(rollbackOn = Exception.class)
+    @Override
+    public Response updateFileInfo(Long id, MultipartFile file, String name, String brief) throws IOException, NoSuchAlgorithmException {
+        ResourceEntity resource = resourceRepository.findById(id).orElseGet(() -> null);
+        if (resource == null) {
+            return new Response(Response.SERVER_DATA_NOT_FOUND_ERROR, "resource not exists");
+        }
+
+        String logo = resource.getLogo();
+        if (file != null) {
+            // TODO : save logo in specific folder
+            // save target logo
+            logo = ((ImageEntity)(saveImage(file, 0L).getData())).getUrl();
+            // TODO : delete origin logo
+        }
+
+        resourceRepository.updateResourceInfo(name, brief, logo, id);
+        return new Response(
+                Response.SUCCESS_CODE,
+                "update resource info success"
+        );
     }
 
     /**

@@ -32,4 +32,15 @@ public interface IResourceRepository extends JpaRepository<ResourceEntity, Long>
      */
     List<ResourceEntity> findResourceEntitiesByFolder(Long folder);
 
+    /**
+     * update name, brief, logo path, id of resource
+     * @param name
+     * @param brief
+     * @param logo
+     * @param id
+     */
+    @Modifying
+    @Query(value = "update resource set name = ?1, brief = ?2, logo = ?3 where id = ?4", nativeQuery = true)
+    void updateResourceInfo(String name, String brief, String logo, Long id);
+
 }

@@ -12,7 +12,7 @@ import java.sql.Timestamp;
  * @Date: Created in 2018/12/3 20:47
  */
 @Entity
-@Table(name = "resource", schema = "easy-blog")
+@Table(name = "resource", schema = "easy-blog", catalog = "")
 public class ResourceEntity {
     private long id;
     private String path;
@@ -23,17 +23,19 @@ public class ResourceEntity {
     private Integer userId = 1;
     private String logo;
     private Long folder;
+    private Long size;
 
     public ResourceEntity() {
 
     }
 
-    public ResourceEntity(String path, String name, String brief, String logo, Long folder) {
+    public ResourceEntity(String path, String name, String brief, String logo, Long folder, Long size) {
         this.path = path;
         this.name = name;
         this.brief = brief;
         this.logo = logo;
         this.folder = folder;
+        this.size = size;
     }
 
     @Id
@@ -156,5 +158,15 @@ public class ResourceEntity {
 
     public void setFolder(Long folder) {
         this.folder = folder;
+    }
+
+    @Basic
+    @Column(name = "size")
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
     }
 }

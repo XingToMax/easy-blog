@@ -34,14 +34,14 @@ layui.use('upload', function(){
 });
 
 // 图片点击
-let imageClick = (imageId) => {
+let resourceClick = (id) => {
     if (pageData.deleteStatus === false) {
         layer.open({
             type: 2,
             area: ['1200px', '800px'],
             fixed: false, //不固定
             maxmin: true,
-            content: 'model/image_view?id=' + imageId,
+            content: 'model/resource_view?id=' + id,
             shadeClose: true,
             cancel : function(index, layero) {
                 console.log('end')
@@ -101,7 +101,7 @@ let getFileData = (folderId) => {
         for (let i = 0; i < result.array.length; i++) {
             folderHtml += '<div class="folder-item resource-image" id="image-'
             folderHtml += result.array[i].id + '"'
-            folderHtml += ' onclick="imageClick(' + result.array[i].id + ')"'
+            folderHtml += ' onclick="resourceClick(' + result.array[i].id + ')"'
             folderHtml += '><img src="'
             folderHtml += HOST + result.array[i].logo + '" '
             folderHtml += 'class="folder-cover"><p class="folder-name">'
@@ -148,11 +148,10 @@ $('#file-edit').click(function () {
             deleteList.push(parseInt(chosenList[i].id.split('-')[1]))
         }
         let param = {idList : deleteList}
-        console.log(param)
         $.ajax({
-            url : HOST + '/admin/resource/image/batch',
+            url : HOST + '/admin/resource/file/batch',
             data : param,
-            type : 'POST',
+            type : 'DELETE',
             success : (result) => {
                 layer.msg('删除结果 : ' + result.msg)
                 getFolderData(pageData.currentFolderId)

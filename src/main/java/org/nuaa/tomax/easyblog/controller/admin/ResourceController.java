@@ -172,7 +172,7 @@ public class ResourceController {
         return resourceService.deleteImage(id);
     }
 
-    @PostMapping("/image/batch")
+    @DeleteMapping("/image/batch")
     public @ResponseBody
     Response deleteImageByIdList(@RequestParam(value = "idList[]") List<Long> idList) throws IOException {
         return resourceService.deleteImgList(idList);
@@ -224,5 +224,20 @@ public class ResourceController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
+    }
+
+    @GetMapping("/file")
+    public @ResponseBody
+    Response getFileById(Long id) {
+        return resourceService.getFileById(id);
+    }
+
+    @PutMapping("/file")
+    public @ResponseBody
+    Response updateFileInfo(@RequestParam(name = "id") Long id,
+                            @RequestParam(name = "name") String name,
+                            @RequestParam(name = "brief") String brief,
+                            @RequestParam(name = "file", required = false) MultipartFile file) throws IOException, NoSuchAlgorithmException {
+        return resourceService.updateFileInfo(id, file, name, brief);
     }
 }
