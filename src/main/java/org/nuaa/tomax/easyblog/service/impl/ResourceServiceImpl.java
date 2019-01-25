@@ -457,6 +457,24 @@ public class ResourceServiceImpl implements IResourceService{
         );
     }
 
+    @Override
+    public Response getAllFileResourceApi() {
+        return new Response<ResourceEntity>(
+                Response.SUCCESS_CODE,
+                "get file data success",
+                resourceRepository.findAll()
+        );
+    }
+
+    @Override
+    public Response getFileByIdApi(Long id) {
+        return new Response<ResourceEntity>(
+                Response.SUCCESS_CODE,
+                "get file data success",
+                resourceRepository.findById(id).orElseGet(() -> null)
+        );
+    }
+
     /**
      * check file name in one folder
      * @param parentId father folder id

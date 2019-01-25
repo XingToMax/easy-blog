@@ -161,4 +161,8 @@ public interface IResourceService {
      * @return
      */
     Response updateFileInfo(Long id, MultipartFile file, String name, String brief) throws IOException, NoSuchAlgorithmException;
+
+    Response getAllFileResourceApi();
+
+    Response getFileByIdApi(Long id);
 }

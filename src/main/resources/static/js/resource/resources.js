@@ -48,7 +48,7 @@ let resourceClick = (id) => {
             }
         });
     } else {
-        let chosenImage = $('#image-' + imageId)
+        let chosenImage = $('#image-' + id)
         if (chosenImage.hasClass('chosen-image')) {
             chosenImage.removeClass('chosen-image')
         } else {

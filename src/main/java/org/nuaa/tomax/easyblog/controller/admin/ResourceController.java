@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -204,7 +205,7 @@ public class ResourceController {
 
     @GetMapping("/file/download")
     public @ResponseBody
-    ResponseEntity<Resource> downloadFile(Long id, HttpServletRequest request) {
+    ResponseEntity<Resource> downloadFile(Long id, HttpServletRequest request) throws UnsupportedEncodingException {
         Resource resource = resourceService.downloadFileResource(id);
         if (resource == null) {
             return new ResponseEntity<Resource>(HttpStatus.NOT_FOUND);
@@ -222,7 +223,7 @@ public class ResourceController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + URLEncoder.encode(resource.getFilename(), "UTF-8") + "\"")
                 .body(resource);
     }
 
