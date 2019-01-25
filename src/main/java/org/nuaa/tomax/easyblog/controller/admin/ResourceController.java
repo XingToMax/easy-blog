@@ -3,10 +3,16 @@ package org.nuaa.tomax.easyblog.controller.admin;
 import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.service.IResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -176,5 +182,47 @@ public class ResourceController {
     public @ResponseBody
     Response uploadFileResource(MultipartFile file, Long folder, String brief) throws IOException {
         return resourceService.saveFileResource(file, folder, brief);
+    }
+
+    @GetMapping("/file/folder")
+    public @ResponseBody
+    Response getFileListByFolderId(Long folder) {
+        return resourceService.getFileResourceListByFolderId(folder);
+    }
+
+    @DeleteMapping("/file/id")
+    public @ResponseBody
+    Response deleteFileById(Long id) throws IOException {
+        return resourceService.deleteFileResource(id);
+    }
+
+    @DeleteMapping("/file/batch")
+    public @ResponseBody
+    Response deleteFileByIdList(@RequestParam(value = "idList[]") List<Long> idList) throws IOException {
+        return resourceService.deleteFileResourceList(idList);
+    }
+
+    @GetMapping("/file/download")
+    public @ResponseBody
+    ResponseEntity<Resource> downloadFile(Long id, HttpServletRequest request) {
+        Resource resource = resourceService.downloadFileResource(id);
+        if (resource == null) {
+            return new ResponseEntity<Resource>(HttpStatus.NOT_FOUND);
+        }
+        String contentType = null;
+        try {
+            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+        } catch (IOException e) {
+            // TODO log
+        }
+
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 }

@@ -1,0 +1,44 @@
+
+.folder-header{
+    line-height: 40px;
+}
+.folder-address{
+    margin-left: 60px;
+    font-size: 16px;
+}
+.folder-address a{
+    cursor: pointer;
+}
+
+#folder-back{
+    cursor: pointer;
+}
+
+.folder-container{
+    margin-left: 60px;
+    margin-top: 30px;
+}
+
+.folder-item{
+    width: 200px;
+    height: 200px;
+    float: left;
+    margin: 10px;
+    cursor: pointer;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    border: 1px solid #fff;
+}
+.folder-cover{
+    width: 100px;
+    height: 100px;
+}
+
+.folder-name{
+    margin-top: 10px;
+}
+
+.chosen-image{
+    border: 1px solid #00aaaa !important;
+}

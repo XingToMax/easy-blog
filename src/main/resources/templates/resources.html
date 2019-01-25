@@ -3,11 +3,34 @@
 <head>
     <title>resources</title>
     <th:block th:include="head::head_link" />
+    <link rel="stylesheet" th:href="@{/css/resource.css}">
 </head>
 <body>
-<button type="button" class="layui-btn layui-btn-normal" id="file-upload">
-    <i class="layui-icon">&#xe67c;</i>上传文件
-</button>
+<fieldset class="layui-elem-field" style="margin-top: 20px;">
+    <legend>文件资源</legend>
+    <br>
+
+    <div class="folder-header layui-row">
+        <div class="folder-address layui-col-md4" id="head-address">
+            <span id="folder-back"><i class="layui-icon">&#xe65c;</i></span>
+            当前位置:
+            <a id="address-0" class="address-link root-link" onclick="linkJump(0)">文件/</a>
+        </div>
+        <div class="layui-col-md5">&nbsp;</div>
+
+        <div class="layui-col-md2" align="left">
+            <button type="button" class="layui-btn layui-btn-danger" id="file-edit">
+                <i class="layui-icon">&#xe640;</i>批量删除
+            </button>
+            <button type="button" class="layui-btn layui-btn-normal" id="file-upload">
+                <i class="layui-icon">&#xe67c;</i>上传资源
+            </button>
+        </div>
+    </div>
+    <div class="folder-container" id="container">
+
+    </div>
+</fieldset>
 </body>
 <th:block th:include="foot::foot_js" />
 <script type="text/javascript" th:src="@{/js/resource/resources.js}"></script>

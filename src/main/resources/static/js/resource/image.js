@@ -103,7 +103,6 @@ layui.use('upload', function(){
         }
         ,field: 'image'
         ,done: function(res){
-            console.log(pageData.currentFolderId)
             layer.msg('上传成功')
             getFolderData(pageData.currentFolderId)
             getImageData(pageData.currentFolderId)

@@ -15,7 +15,9 @@ import org.nuaa.tomax.easyblog.util.FileUtil;
 import org.nuaa.tomax.easyblog.util.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.StringUtils;
@@ -25,6 +27,7 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -404,12 +407,19 @@ public class ResourceServiceImpl implements IResourceService{
 
     @Override
     public Resource downloadFileResource(Long id) {
-        ResourceEntity resource = resourceRepository.findById(id).orElseGet(() -> null);
-        if (resource == null) {
+        ResourceEntity resourceEntity = resourceRepository.findById(id).orElseGet(() -> null);
+        if (resourceEntity == null) {
             return null;
         }
-
-
+        try {
+            Resource resource = new FileUrlResource(sourceRootList[ConstResourceType.FILE_FOLDER_TYPE] + resourceEntity.getPath());
+            if (resource.exists()) {
+                return resource;
+            }
+        } catch (MalformedURLException e) {
+            // TODO : log
+            return null;
+        }
         return null;
     }
 
