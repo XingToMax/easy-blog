@@ -1,5 +1,6 @@
 package org.nuaa.tomax.easyblog.controller.admin;
 
+import lombok.extern.java.Log;
 import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.entity.UserEntity;
 import org.nuaa.tomax.easyblog.service.IUserService;
@@ -18,6 +19,7 @@ import java.security.NoSuchAlgorithmException;
  * @Description:
  * @Date: Created in 2018/12/3 17:30
  */
+@Log
 @Controller
 @CrossOrigin
 @RequestMapping("/admin/user")
@@ -43,8 +45,11 @@ public class    UserController {
     Response login(String username, String password, HttpSession session) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         Response response = userService.login(username, password);
         if (response.getCode() == Response.SUCCESS_CODE) {
+            log.info(username + " login success");
             Long userId = ((UserEntity) response.getData()).getId();
             session.setAttribute("User", response.getData());
+        } else {
+            log.info(username + "login fail");
         }
         return response;
     }
