@@ -1,5 +1,6 @@
 package org.nuaa.tomax.easyblog.controller.admin;
 
+import org.nuaa.tomax.easyblog.annotation.ServiceLog;
 import org.nuaa.tomax.easyblog.entity.ClassificationEntity;
 import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.service.IClassificationService;
@@ -25,23 +26,27 @@ public class ClassificationController {
 
     @GetMapping
     public @ResponseBody
+    @ServiceLog
     Response getClassificationData(int page, int limit) {
         return classificationService.getClassificationData(page, limit);
     }
 
     @PostMapping
+    @ServiceLog
     public @ResponseBody
     Response createNewClassification(ClassificationEntity classification) {
         return classificationService.addClassification(classification);
     }
 
     @PutMapping
+    @ServiceLog
     public @ResponseBody
     Response updateClassification(ClassificationEntity classification) {
         return classificationService.updateClassification(classification);
     }
 
     @DeleteMapping
+    @ServiceLog
     public @ResponseBody
     Response deleteClassification(Long id) {
         return classificationService.deleteClassification(id);

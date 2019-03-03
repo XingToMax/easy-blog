@@ -1,5 +1,6 @@
 package org.nuaa.tomax.easyblog.controller.admin;
 
+import org.nuaa.tomax.easyblog.annotation.ServiceLog;
 import org.nuaa.tomax.easyblog.entity.LinkEntity;
 import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.service.ILinkService;
@@ -24,24 +25,28 @@ public class LinkController {
     }
 
     @GetMapping
+    @ServiceLog
     public @ResponseBody
     Response getLinkList(int page, int limit) {
         return linkService.listLinkData(page, limit);
     }
 
     @PostMapping
+    @ServiceLog
     public @ResponseBody
     Response createLink(LinkEntity link) {
         return linkService.addLink(link);
     }
 
     @PutMapping
+    @ServiceLog
     public @ResponseBody
     Response updateLink(LinkEntity link) {
         return linkService.updateLink(link);
     }
 
     @DeleteMapping
+    @ServiceLog
     public @ResponseBody
     Response deleteLink(Long id) {
         return linkService.removeLink(id);

@@ -1,5 +1,6 @@
 package org.nuaa.tomax.easyblog.controller.admin;
 
+import org.nuaa.tomax.easyblog.annotation.ServiceLog;
 import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.service.IResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,7 @@ public class ResourceController {
      * @return query data
      */
     @GetMapping("/folder")
+    @ServiceLog
     public @ResponseBody
     Response listFolderData(int type, int page, int limit) {
         return resourceService.listFolders(type, page, limit);
@@ -58,6 +60,7 @@ public class ResourceController {
      * @return create response
      */
     @PostMapping("/folder")
+    @ServiceLog
     public @ResponseBody
     Response createFolder(String name, Long parentId, int type) {
         return resourceService.createNewFolder(name, parentId, type);
@@ -70,6 +73,7 @@ public class ResourceController {
      * @return update response
      */
     @PutMapping("/folder/name")
+    @ServiceLog
     public @ResponseBody
     Response updateFolderName(Long folderId, String name) {
         return resourceService.updateFolderName(folderId, name);
@@ -82,6 +86,7 @@ public class ResourceController {
      * @return folder query result
      */
     @GetMapping("/folder/parent")
+    @ServiceLog
     public @ResponseBody
     Response listFolderByParent(Long parentId, int type) {
         return resourceService.listFolderByFather(parentId, type);
@@ -93,6 +98,7 @@ public class ResourceController {
      * @return folder data
      */
     @GetMapping("/folder/id")
+    @ServiceLog
     public @ResponseBody
     Response getFolderById(Long folderId) {
         return resourceService.getFolderById(folderId);
@@ -104,6 +110,7 @@ public class ResourceController {
      * @return delete response
      */
     @DeleteMapping("/folder")
+    @ServiceLog
     public @ResponseBody
     Response deleteFolder(Long folderId) {
         return new Response(
@@ -122,6 +129,7 @@ public class ResourceController {
      * @throws IOException
      */
     @PostMapping("/image")
+    @ServiceLog
     public @ResponseBody
     Response uploadImage(MultipartFile image, Long parentId) throws IOException, NoSuchAlgorithmException {
         // TODO : image check
@@ -134,6 +142,7 @@ public class ResourceController {
      * @return
      */
     @GetMapping("/image/folder")
+    @ServiceLog
     public @ResponseBody
     Response getImageDataByFolder(Long parentId) {
         return resourceService.getImageListByFolderId(parentId);
@@ -145,6 +154,7 @@ public class ResourceController {
      * @return
      */
     @GetMapping("/image/id")
+    @ServiceLog
     public @ResponseBody
     Response getImageDataById(Long imageId) {
         return resourceService.getImageById(imageId);
@@ -157,6 +167,7 @@ public class ResourceController {
      * @return
      */
     @PutMapping("/image/id")
+    @ServiceLog
     public @ResponseBody
     Response updateImageName(Long id, String name) {
         return resourceService.updateImageName(id, name);
@@ -168,36 +179,42 @@ public class ResourceController {
      * @return
      */
     @DeleteMapping("/image/id")
+    @ServiceLog
     public @ResponseBody
     Response deleteImageById(Long id) throws IOException {
         return resourceService.deleteImage(id);
     }
 
     @DeleteMapping("/image/batch")
+    @ServiceLog
     public @ResponseBody
     Response deleteImageByIdList(@RequestParam(value = "idList[]") List<Long> idList) throws IOException {
         return resourceService.deleteImgList(idList);
     }
 
     @PostMapping("/file")
+    @ServiceLog
     public @ResponseBody
     Response uploadFileResource(MultipartFile file, Long folder, String brief) throws IOException {
         return resourceService.saveFileResource(file, folder, brief);
     }
 
     @GetMapping("/file/folder")
+    @ServiceLog
     public @ResponseBody
     Response getFileListByFolderId(Long folder) {
         return resourceService.getFileResourceListByFolderId(folder);
     }
 
     @DeleteMapping("/file/id")
+    @ServiceLog
     public @ResponseBody
     Response deleteFileById(Long id) throws IOException {
         return resourceService.deleteFileResource(id);
     }
 
     @DeleteMapping("/file/batch")
+    @ServiceLog
     public @ResponseBody
     Response deleteFileByIdList(@RequestParam(value = "idList[]") List<Long> idList) throws IOException {
         return resourceService.deleteFileResourceList(idList);
@@ -229,11 +246,13 @@ public class ResourceController {
 
     @GetMapping("/file")
     public @ResponseBody
+    @ServiceLog
     Response getFileById(Long id) {
         return resourceService.getFileById(id);
     }
 
     @PutMapping("/file")
+    @ServiceLog
     public @ResponseBody
     Response updateFileInfo(@RequestParam(name = "id") Long id,
                             @RequestParam(name = "name") String name,

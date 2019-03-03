@@ -1,6 +1,7 @@
 package org.nuaa.tomax.easyblog.controller.admin;
 
 import lombok.extern.java.Log;
+import org.nuaa.tomax.easyblog.annotation.ServiceLog;
 import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.entity.UserEntity;
 import org.nuaa.tomax.easyblog.service.IUserService;
@@ -42,6 +43,7 @@ public class    UserController {
      */
     @PostMapping("/login")
     public @ResponseBody
+    @ServiceLog
     Response login(String username, String password, HttpSession session) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         Response response = userService.login(username, password);
         if (response.getCode() == Response.SUCCESS_CODE) {
@@ -56,6 +58,7 @@ public class    UserController {
 
 
     @GetMapping("")
+    @ServiceLog
     public @ResponseBody
     Response getUser() {
         return new Response<UserEntity>(
@@ -66,6 +69,7 @@ public class    UserController {
     }
 
     @PutMapping("/avatar")
+    @ServiceLog
     public @ResponseBody
     Response updateAvatar(MultipartFile file) throws IOException {
         return userService.updateUserInfo(null, file);

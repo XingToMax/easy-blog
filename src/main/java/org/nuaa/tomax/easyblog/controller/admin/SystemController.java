@@ -1,5 +1,6 @@
 package org.nuaa.tomax.easyblog.controller.admin;
 
+import org.nuaa.tomax.easyblog.annotation.ServiceLog;
 import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.service.IUserService;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ public class SystemController {
     }
 
     @GetMapping("/countData")
+    @ServiceLog
     public @ResponseBody
     Response countData() {
         return userService.systemInfoApi();

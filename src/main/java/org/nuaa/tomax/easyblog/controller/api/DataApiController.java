@@ -1,5 +1,6 @@
 package org.nuaa.tomax.easyblog.controller.api;
 
+import org.nuaa.tomax.easyblog.annotation.ServiceLog;
 import org.nuaa.tomax.easyblog.entity.Response;
 import org.nuaa.tomax.easyblog.service.*;
 import org.nuaa.tomax.easyblog.util.FileUtil;
@@ -47,48 +48,56 @@ public class DataApiController {
     }
 
     @GetMapping("/blog")
+    @ServiceLog
     public @ResponseBody
     Response getBlogList(int page, int limit) {
         return blogService.getBlogDataListRencentApi(page, limit);
     }
 
     @GetMapping("/blog/{id}")
+    @ServiceLog
     public @ResponseBody
     Response getBlogById(@PathVariable(name = "id") Long id) {
         return blogService.getBlogByIdApi(id);
     }
 
     @GetMapping("/classification")
+    @ServiceLog
     public @ResponseBody
     Response getClassificationList() {
         return classificationService.getClassificationListApi();
     }
 
     @GetMapping("/classification/{id}")
+    @ServiceLog
     public @ResponseBody
     Response getClassificationBlogList(@PathVariable(name = "id") Long id, int page, int limit) {
         return blogService.getBlogDataListByCategoryApi(id, page, limit);
     }
 
     @GetMapping("/label/{labelName}")
+    @ServiceLog
     public @ResponseBody
     Response getLabelBlogList(@PathVariable(name = "labelName") String label, int page, int limit) {
         return blogService.getBlogDataListByLabelApi(label, page, limit);
     }
 
     @GetMapping("/label")
+    @ServiceLog
     public @ResponseBody
     Response getLabelList() {
         return blogService.getLabelListApi();
     }
 
     @GetMapping("/clsName/{id}")
+    @ServiceLog
     public @ResponseBody
     Response getClsName(@PathVariable(name = "id") Long id) {
         return classificationService.getClassificationNameById(id);
     }
 
     @GetMapping("/user")
+    @ServiceLog
     public @ResponseBody
     Response getUserInfo() {
         return userService.userInfoApi();
@@ -112,11 +121,13 @@ public class DataApiController {
     }
 
     @GetMapping("/file")
+    @ServiceLog
     public Response getFileList() {
         return resourceService.getAllFileResourceApi();
     }
 
     @GetMapping("/file/{id}")
+    @ServiceLog
     public Response getFileById(@PathVariable(name = "id") Long id) {
         return resourceService.getFileByIdApi(id);
     }

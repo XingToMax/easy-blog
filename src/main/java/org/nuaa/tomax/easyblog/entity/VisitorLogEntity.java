@@ -12,7 +12,7 @@ import java.sql.Timestamp;
  * @Date: Created in 2018/12/3 20:47
  */
 @Entity
-@Table(name = "visitor_log", schema = "easy-blog")
+@Table(name = "visitor_log", schema = "easy-blog", catalog = "")
 public class VisitorLogEntity {
     private String ip;
     private String browser;
@@ -20,6 +20,20 @@ public class VisitorLogEntity {
     private Integer type;
     private Timestamp time;
     private long id;
+    private String description;
+    private Integer code;
+
+    public VisitorLogEntity() {
+
+    }
+
+    public VisitorLogEntity(String ip, String browser, String device, String description, Integer code) {
+        this.ip = ip;
+        this.browser = browser;
+        this.device = device;
+        this.description = description;
+        this.code = code;
+    }
 
     @Basic
     @Column(name = "ip")
@@ -107,5 +121,25 @@ public class VisitorLogEntity {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    @Basic
+    @Column(name = "description")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Basic
+    @Column(name = "code")
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
     }
 }
