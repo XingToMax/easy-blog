@@ -47,7 +47,6 @@ public class UserServiceImpl implements IUserService{
     public Response login(String username, String password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         UserEntity user = userRepository.findByUsername(username);
         if (user != null && PasswordEncryptUtil.validPassword(password, user.getPassword())) {
-            user.setPassword("");
             return new Response<UserEntity>(
                     Response.SUCCESS_CODE,
                     "登录验证成功",

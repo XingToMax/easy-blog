@@ -24,7 +24,7 @@ import java.security.NoSuchAlgorithmException;
 @Controller
 @CrossOrigin
 @RequestMapping("/admin/user")
-public class    UserController {
+public class UserController {
     private final IUserService userService;
 
     @Autowired

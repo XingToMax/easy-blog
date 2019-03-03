@@ -1,6 +1,5 @@
 package org.nuaa.tomax.easyblog.controller.admin;
 
-import org.nuaa.tomax.easyblog.annotation.ServiceLog;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
