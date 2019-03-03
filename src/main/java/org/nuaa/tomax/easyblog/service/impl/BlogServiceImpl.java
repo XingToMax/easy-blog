@@ -9,6 +9,8 @@ import org.nuaa.tomax.easyblog.repository.IClassificationRepository;
 import org.nuaa.tomax.easyblog.service.IBlogService;
 import org.nuaa.tomax.easyblog.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
  * @Date: Created in 2018/12/9 23:20
  */
 @Service
+@CacheConfig(cacheNames = "blog")
 public class BlogServiceImpl implements IBlogService {
 
     private final IBlogRepository blogRepository;
@@ -198,13 +201,8 @@ public class BlogServiceImpl implements IBlogService {
         if(blog == null) {
             return new Response(Response.SERVER_DATA_NOT_FOUND_ERROR, "blog not exists");
         }
-
         // read content
-        try {
-            blog.setMarkdownContent(FileUtil.readMarkdownFile(blogRootPath + blog.getPath() + ".md"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        blog.setMarkdownContent(getMarkdownContent(blog));
         return new Response<BlogEntity>(
                 Response.SUCCESS_CODE,
                 "get blog success",
@@ -239,5 +237,16 @@ public class BlogServiceImpl implements IBlogService {
      */
     private String getClassificationName(Long classification) {
         return classificationRepository.findNameById(classification);
+    }
+
+    @Cacheable
+    public String getMarkdownContent(BlogEntity blog) {
+        String content = "";
+        try {
+            content = FileUtil.readMarkdownFile(blogRootPath + blog.getPath() + ".md");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return content;
     }
 }
